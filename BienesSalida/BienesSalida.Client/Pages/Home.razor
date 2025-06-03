@@ -1,0 +1,180 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+
+
+<style>
+    .valid.modified:not([type=checkbox]) {
+        outline: 1px solid #26b050;
+    }
+
+    .invalid {
+        outline: 1px solid red;
+    }
+
+    .validation-message {
+        color: red;
+    }
+</style>
+
+<PageTitle>Home</PageTitle>
+<h1 class="text-center m-5 custom-text"> SOLICITUD DE SALIDA DE BIENES </h1>
+
+<div class="mb-3 mx-auto custom-text m-3">
+    <h5 for="Nombre" class="form-label m-2">Nombre: @nombreUsuario</h5>
+    <h5 class="label label-default m-2">Fecha actual: @fechaFormateada</h5>
+    <h5 class="label label-default m-2">Hora actual: @horaFormateada</h5>
+</div>
+
+<div class="mb-3 w-50 mx-auto text-center custom-text">
+    <Button Color="ButtonColor.Danger" @onclick="OnShowModalClick" Outline="true" Class="shadow-lg">Registrar bien a salir</Button>
+</div>
+
+<h3 class="m-5 custom-text">HISTORIAL DEL USUARIO</h3>
+
+
+<Modal @ref="modal" title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
+    <BodyTemplate>
+        <EditForm EditContext="@editContext" OnValidSubmit="ValidateForm">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3 w-100 custom-text" style="background-color:#e3e3e3; padding:1rem;">
+                <div class="w75 mx-auto">
+                    <label for="Area" class="form-label">Área <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-sm" id="Area" aria-describedby="Área" @bind-value="@solicitud.Area" />
+                    <ValidationMessage For="@(() => solicitud.Area)" />
+
+                    <label for="EncargadoArea" class="form-label">Encargado de Área <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-sm" id="EArea" aria-describedby="Encargado de Área" @bind-value="@solicitud.EncargadoArea" />
+                    <ValidationMessage For="@(() => solicitud.EncargadoArea)" />
+
+                    <label for="Numero" class="form-label">No.</label>
+                    <NumberInput TValue="int" @bind-Value="@contNo" Disabled />
+
+                    <label for="NumeroInv" class="form-label">No. Inventario <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control form-control-sm" id="NumeroInv"
+                           aria-describedby="NumeroInv" @bind-value="@solicitud.NumeroInventario"
+                           pattern="[0-9]+" title="Solo se permiten números enteros" />
+                    <ValidationMessage For="@(() => solicitud.NumeroInventario)" />
+
+                    <label for="Descrip" class="form-label">Descripción</label>
+                    <TextAreaInput @bind-Value="@solicitud.Descripcion" Rows="3" disabled />
+
+                    <label for="Motivo" class="form-label">Motivo de salida <span class="text-danger">*</span></label>
+                    <TextAreaInput @bind-Value="@solicitud.MotivoSalida" Rows="3" />
+                    <ValidationMessage For="@(() => solicitud.MotivoSalida)" />
+
+                    <label for="Observa" class="form-label">Observaciones <span class="text-danger">*</span></label>
+                    <TextAreaInput @bind-Value="@solicitud.Observaciones" Rows="3" />
+                    <ValidationMessage For="@(() => solicitud.Observaciones)" />
+                </div>
+            </div>
+        </EditForm>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div class="toast show text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style="display:@(showToast ? "block" : "none")">
+                <div class="toast-body">
+                    Algunos campos obligatorios están vacíos. Por favor, complétalos.
+                </div>
+            </div>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" @onclick="ValidateForm">Enviar</Button>
+    </FooterTemplate>
+</Modal>
+
+
+<BienesSalida.Client.Components.TablaProductos/>
+@code {
+    private Modal modal = default!;
+    private SolicitudBien solicitud = new();
+    private EditContext? editContext;
+    private string fechaFormateada = "", horaFormateada = "", fyh, nombreUsuario = "Ana Teresa";
+    private int contNo = 1;
+    private System.Timers.Timer? timer;
+    private bool showToast = false;
+
+    public List<Usuarios>? listaUsua = new();
+    public List<Producto>? listaInv = new();
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        // listaUsua = await ConexionBase.ObtenerUsuarios();
+      
+                    UpdateTime();
+        StartTimer();
+
+        DateTime fechaActual = DateTime.Now;
+        fechaFormateada = fechaActual.ToString("dd/MM/yyyy");
+        horaFormateada = fechaActual.ToString("HH:mm:ss");
+        fyh = fechaFormateada + " " + horaFormateada;
+
+        editContext = new EditContext(solicitud);
+    }
+
+
+    private void StartTimer()
+    {
+        timer = new System.Timers.Timer(1000); // Ejecutar cada 1 segundo
+        timer.Elapsed += (sender, e) => UpdateTime();
+        timer.AutoReset = true;
+        timer.Enabled = true;
+    }
+
+    private void UpdateTime()
+    {
+        DateTime fechaActual = DateTime.Now;
+        fechaFormateada = fechaActual.ToString("dd/MM/yyyy");
+        horaFormateada = fechaActual.ToString("HH:mm:ss");
+
+        InvokeAsync(StateHasChanged); // Forzar actualización en la UI
+    }
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task ValidateForm()
+    {
+        if (!editContext.Validate())
+        {
+            showToast = true;
+            StateHasChanged();
+            await Task.Delay(3000);
+            showToast = false;
+            StateHasChanged();
+        }
+        else
+        {
+            solicitud = new SolicitudBien();
+            editContext = new EditContext(solicitud);
+            contNo++;
+            await modal.HideAsync();
+        }
+    }
+
+    public class SolicitudBien
+    {
+        [Required(ErrorMessage = "Área requerida.")]
+        public string? Area { get; set; }
+
+        [Required(ErrorMessage = "Encargado de área requerido.")]
+        public string? EncargadoArea { get; set; }
+
+        public string? Numero { get; set; }
+
+        [Required(ErrorMessage = "No. Inventario requerido, solo se aceptan valores numéricos.")]
+        [RegularExpression(@"^.\d+$", ErrorMessage = "Solo se permiten números enteros.")]
+        public string? NumeroInventario { get; set; }
+
+        public string? Descripcion { get; set; }
+
+        [Required(ErrorMessage = "Motivo de salida requerido.")]
+        public string? MotivoSalida { get; set; }
+
+        [Required(ErrorMessage = "Observaciones requerido.")]
+        public string? Observaciones { get; set; }
+    }
+
+}

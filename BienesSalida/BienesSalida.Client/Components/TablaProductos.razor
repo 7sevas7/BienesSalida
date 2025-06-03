@@ -1,0 +1,53 @@
+﻿<Grid TItem="Producto"
+Class="table table-hover table-bordered table-striped"
+
+DataProvider="EmployeesDataProvider"
+AllowPaging="true"
+PageSize="5"
+Responsive="true">
+
+    <GridColumns>
+        <GridColumn TItem="Producto" HeaderText="Id">
+            @context.area
+        </GridColumn>
+        <GridColumn TItem="Producto" HeaderText="Employee Name">
+            @context.bienID
+        </GridColumn>      
+        <GridColumn TItem="Producto" HeaderText="Designation">
+            @context.tipoBien
+        </GridColumn>      
+        <GridColumn TItem="Producto" HeaderText="DOJ">
+            @context.marca
+        </GridColumn>     
+        <GridColumn TItem="Producto" HeaderText="Active">
+            @context.descripcion
+        </GridColumn>
+    </GridColumns>
+
+</Grid>
+
+@code {
+    private IEnumerable<Producto> productos = default!;
+    private Paginado? paginado { set; get; } = new();
+
+    
+    private async Task<GridDataProviderResult<Producto>> EmployeesDataProvider(GridDataProviderRequest<Producto> request)
+    {
+        if (productos is null) // pull employees only one time for client-side filtering, sorting, and paging
+            productos = await GetEmployees(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(productos));
+    }
+
+    private async Task<IEnumerable<Producto>> GetEmployees()
+    {
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, "http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta");
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var text = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(text);
+        paginado = JsonConvert.DeserializeObject<Paginado>(text);
+        return  paginado.registros;
+    }
+}
