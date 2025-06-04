@@ -1,0 +1,40 @@
+﻿@page "/consulta"
+
+
+<PageTitle>Historial</PageTitle>
+<h1 class="text-center m-5 custom-text"> Historial de salidas</h1>
+
+<div class="mb-3 text-center w-50 mx-auto">
+    <h3 for="busque" class="form-label p-6 me-2">Realizar busqueda: </h3>
+</div>
+
+<div class="mb-3 text-center w-75 mx-auto d-flex align-items-center">
+    <DateInput TValue="DateOnly" @bind-Value="@date1" Placeholder="Fecha"/>
+    <input type="text" class="form-control shadow-lg p-2 m-3" id="search" placeholder="Nombre">
+    <input type="text" class="form-control shadow-lg p-2 m-3" id="search" placeholder="No. inventario">
+    <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2">
+        <Icon Name="IconName.Search" Color="IconColor.White" />
+    </Button>
+    <Button Color="ButtonColor.Success" class="shadow-lg p-2 m-3">
+        <Icon Name="IconName.FileTypeXls" Color="IconColor.White" />
+    </Button>
+</div>
+
+<table class="table m-2">
+   <thead>
+      <tr>
+         <th>Fecha y hora</th>
+         <th>Nombre</th>
+         <th>No.</th>
+         <th>No. Inventario</th>
+         <th>Descripción</th>
+         <th>Motivo de salida</th>
+         <th>Observaciones</th>
+         <th>Estatus</th>
+      </tr>
+   </thead>
+</table>
+
+@code {
+    private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now.AddDays(1));
+}

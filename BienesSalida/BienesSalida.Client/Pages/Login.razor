@@ -1,0 +1,128 @@
+﻿@page "/"
+
+@inject NavigationManager navi
+@layout LoginLayout
+
+
+<div class="blur-background">
+    <div class="card shadow-lg w-50 m-3" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color:white;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-header d-flex justify-content-around align-items-center" style="background-color:#e3e3e3;">
+                    <h2 class="text-center m-1 ">SISTEMA DE SOLICITUD DE SALIDA DE BIENES</h2>
+                    <img class="rounded-top" width="200" height="80" src="/Imagenes/DIF_LOGO-02.png" alt="placeholder" />
+                </div>
+                <div class="card-body custom-text " style="color:black">
+                    <div class="mb-3 text-center w-50 mx-auto">
+                        <label for="User" class="form-label p-2">Usuario</label>
+                        <input @bind="usuario" type="text" class="form-control shadow-lg p-2" id="User" aria-descrgit statusibedby="UserHelp" placeholder="Usuario">
+                        <label for="Pass" class="form-label p-2">Contraseña</label>
+                        <PasswordInput Value="@Password" ValueExpression="() => Password" ValueChanged="(value) => PasswordChanged(value)" placeholder="Contraseña" class="shadow-lg p-2" />
+
+                        <EditForm Model="@Codigo" class="text-center mx-auto">
+                            <div class="row">
+                                <div class="col-10">
+                                    <Captcha CaptchaWord="@capt" OnRefresh="NuevoCaptcha" />
+                                </div>
+                                <div class="col-10">
+                                    <label> Ingrese el código </label>
+                                    <input type="text" class="form-control" @bind-value="Codigo.code" />
+                                </div>
+                                <div class="col-10">
+                                    <Button Color="ButtonColor.Warning" @onclick="ValidacionCapt">Validar</Button>
+                                </div>
+                            </div>
+                        </EditForm>
+                        
+                    </div>
+                    <div class="mb-3 w-50 text-center p-2 mx-auto">
+                        <Button Color="ButtonColor.Success" @onclick="Verificar">Enviar</Button>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </div>
+    <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+</div>
+
+@code {
+
+    private string? Password = null;
+    private string? usuario{set; get;}
+
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void PasswordChanged(string? value)
+    {
+        Password = value;
+    }
+    private void Verificar()
+    {
+        Home home = new Home();
+        BasesCon BC = new BasesCon();
+        BC.ObtenerUsuarios(usuario, Password);
+
+        if (BC.res = true)
+        {
+            home.nombreUsuario = BC.nombreEmp;
+            navi.NavigateTo("/home");     
+        }
+        else
+        {
+            titu = "ERROR";
+            mensaj = "Falla al iniciar sesión, favor de verificar datos.";
+            ShowMessage(ToastType.Danger);
+        }
+
+    }
+
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+    public string titu, mensaj;
+
+
+    private ToastMessage CreateToastMessage(ToastType toastType)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = titu,
+            HelpText = $"{DateTime.Now}",
+            Message = mensaj,
+        };
+
+    public CaptchaGenerator Codigo = new CaptchaGenerator();
+    public string bien, mal, capt = "";
+
+    private void NuevoCaptcha()
+    {
+        capt = BlazorCaptcha.Commun.Tools.GetCaptchaWord(5);
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        NuevoCaptcha();
+        return base.OnInitializedAsync();
+    }
+
+    public void ValidacionCapt()
+    {
+        if (Codigo.code.Trim().Equals(capt.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            bien = "Validación correcta";
+            titu = "CAPTCHA CORRECTO";
+            mensaj = bien;
+            ShowMessage(ToastType.Success);
+        }
+        else
+        {
+            mal = "Validación errónea, intente de nuevo";
+            titu = "CAPTCHA INCORRECTO";
+            mensaj = mal;
+            ShowMessage(ToastType.Danger);
+            bien = null;
+            mal = null; // Resetear mensajes
+            NuevoCaptcha(); // Regenerar captcha si es incorrecto
+        }
+
+        StateHasChanged(); // Forzar actualización de la interfaz
+    }
+}

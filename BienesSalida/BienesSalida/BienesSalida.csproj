@@ -10,8 +10,11 @@
     <ProjectReference Include="..\..\BienesSalida.Share\BienesSalida.Share.csproj" />
     <ProjectReference Include="..\BienesSalida.Client\BienesSalida.Client.csproj" />
     <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />
+    <PackageReference Include="BlazorCaptcha" Version="2.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.15" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0-preview1.25120.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
   </ItemGroup>
 
 </Project>

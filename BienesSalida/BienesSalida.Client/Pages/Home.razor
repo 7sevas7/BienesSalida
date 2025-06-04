@@ -1,6 +1,4 @@
-﻿@page "/"
-@using System.ComponentModel.DataAnnotations
-
+﻿@page "/home"
 
 <style>
     .valid.modified:not([type=checkbox]) {
@@ -90,7 +88,8 @@
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
-    private string fechaFormateada = "", horaFormateada = "", fyh, nombreUsuario = "Ana Teresa";
+    private string fechaFormateada = "", horaFormateada = "", fyh;
+    public string nombreUsuario;
     private int contNo = 1;
     private System.Timers.Timer? timer;
     private bool showToast = false;
