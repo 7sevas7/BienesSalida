@@ -59,22 +59,20 @@
     private void Verificar()
     {
         BasesCon BC = new BasesCon();
-        BC.consultaAsync();
-        @*Home home = new Home();
-        BasesCon BC = new BasesCon();
-        BC.ObtenerUsuarios(usuario, Password);
+        BC.consultaAsync(usuario, Password);
+        Home home = new Home();
 
         if (BC.res = true)
         {
-            home.nombreUsuario = BC.nombreEmp;
+            //home.nombreUsuario = BC.nombreEmp;
             navi.NavigateTo("/home");     
         }
-        else
+        else if (BC.res = false)
         {
             titu = "ERROR";
             mensaj = "Falla al iniciar sesión, favor de verificar datos.";
             ShowMessage(ToastType.Danger);
-        }*@
+        }
 
     }
 

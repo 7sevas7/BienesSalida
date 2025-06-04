@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using System;
 using System.Threading.Tasks;
 
@@ -6,7 +7,9 @@ namespace BienesSalida.Components.Pages
 {
     public class BasesCon
     {
-        public async Task consultaAsync()
+        public Boolean res = false;
+
+        public async Task consultaAsync(string rfc, string pass)
         {
             var builder = new SqlConnectionStringBuilder
             {
@@ -14,8 +17,7 @@ namespace BienesSalida.Components.Pages
                 UserID = "usuSalidasBienes",
                 Password = "2E<+AuU3v$Cx=R~7$",
                 InitialCatalog = "expediente_personas2018",
-                TrustServerCertificate = true // Agregar esta línea
-
+                TrustServerCertificate = true
             };
 
             var connectionString = builder.ConnectionString;
@@ -27,14 +29,23 @@ namespace BienesSalida.Components.Pages
 
                 Console.WriteLine("Conexión establecida correctamente.");
 
-                var sql = "SELECT id_empleado, nombre_completo FROM vw_acceso";
-                //var sql = "SELECT id_empleado, nombre_completo FROM vw_acceso WHERE RFC = '"+rfc+"' and pass = '"+pass+"'";
+                var sql = "SELECT id_empleado, nombre_completo FROM vw_acceso WHERE RFC = @rfc AND pass = @pass";
                 await using var command = new SqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@rfc", rfc);
+                command.Parameters.AddWithValue("@pass", pass);
+
                 await using var reader = await command.ExecuteReaderAsync();
 
-                while (await reader.ReadAsync())
+                // Verificar si hay resultados
+                if (await reader.ReadAsync())
                 {
-                    Console.WriteLine("ID: {0}, Nombre: {1}", reader.GetInt32(0), reader.GetString(1));
+                    res = true;
+                    Console.WriteLine("Autenticación exitosa: ID {0}, Nombre {1}", reader.GetInt32(0), reader.GetString(1));
+                }
+                else
+                {
+                    res = false;
+                    Console.WriteLine("No se encontraron coincidencias.");
                 }
             }
             catch (SqlException sqlEx)
