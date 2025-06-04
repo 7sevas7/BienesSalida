@@ -7,7 +7,7 @@ namespace BienesSalida.Components.Pages
 {
     public class BasesCon
     {
-        public Boolean res = false;
+        public static Boolean res = false;
 
         public async Task consultaAsync(string rfc, string pass)
         {

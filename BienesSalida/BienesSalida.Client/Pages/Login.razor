@@ -56,13 +56,12 @@
     {
         Password = value;
     }
-    private void Verificar()
+    private async Task Verificar()
     {
         BasesCon BC = new BasesCon();
-        BC.consultaAsync(usuario, Password);
-        Home home = new Home();
+        await BC.consultaAsync(usuario, Password); // Esperar la ejecución del método asíncrono
 
-        if (BC.res == false)
+        if (BasesCon.res == false)
         {
             titu = "ERROR";
             mensaj = "Falla al iniciar sesión, favor de verificar datos.";
@@ -70,10 +69,8 @@
         }
         else
         {
-            //home.nombreUsuario = BC.nombreEmp;
             navi.NavigateTo("/home");
         }
-
     }
 
     private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
