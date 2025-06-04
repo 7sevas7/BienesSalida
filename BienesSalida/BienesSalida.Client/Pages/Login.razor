@@ -62,16 +62,16 @@
         BC.consultaAsync(usuario, Password);
         Home home = new Home();
 
-        if (BC.res = true)
-        {
-            //home.nombreUsuario = BC.nombreEmp;
-            navi.NavigateTo("/home");     
-        }
-        else if (BC.res = false)
+        if (BC.res == false)
         {
             titu = "ERROR";
             mensaj = "Falla al iniciar sesión, favor de verificar datos.";
             ShowMessage(ToastType.Danger);
+        }
+        else
+        {
+            //home.nombreUsuario = BC.nombreEmp;
+            navi.NavigateTo("/home");
         }
 
     }
