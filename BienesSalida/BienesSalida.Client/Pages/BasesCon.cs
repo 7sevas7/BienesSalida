@@ -8,6 +8,8 @@ namespace BienesSalida.Components.Pages
     public class BasesCon
     {
         public static Boolean res = false;
+        public static string nameEmp;
+        public static int idEmp;
 
         public async Task consultaAsync(string rfc, string pass)
         {
@@ -40,6 +42,9 @@ namespace BienesSalida.Components.Pages
                 if (await reader.ReadAsync())
                 {
                     res = true;
+
+                    idEmp = reader.GetInt32(0);
+                    nameEmp = reader.GetString(1);
                 }
                 else
                 {

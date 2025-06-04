@@ -85,11 +85,12 @@
 
 
 @code {
+    public static string nombreUsuario = BasesCon.nameEmp;
+
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
     private string fechaFormateada = "", horaFormateada = "", fyh;
-    public string nombreUsuario;
     private int contNo = 1;
     private System.Timers.Timer? timer;
     private bool showToast = false;
