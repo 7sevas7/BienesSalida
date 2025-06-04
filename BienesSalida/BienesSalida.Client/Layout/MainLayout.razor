@@ -8,7 +8,8 @@
              DataProvider="SidebarDataProvider" />
 
     <main>
-        <div class="bb-top-row px-4 d-flex justify-content-end">
+        <div class="bb-top-row px-4 d-flex justify-content-between">
+            <Icon Name="IconName.List" role="button" @onclick="ToggleSidebar" />
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
@@ -42,6 +43,9 @@
 
         return navItems;
     }
+
+    private void ToggleSidebar() => sidebar.ToggleSidebar();
+
 }
 
 <div id="blazor-error-ui">

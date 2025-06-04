@@ -4,15 +4,15 @@
 
 <style>
     .valid.modified:not([type=checkbox]) {
-        outline: 1px solid #26b050;
+    outline: 1px solid #26b050;
     }
 
     .invalid {
-        outline: 1px solid red;
+    outline: 1px solid red;
     }
 
     .validation-message {
-        color: red;
+    color: red;
     }
 </style>
 
@@ -52,8 +52,11 @@
 
                     <label for="NumeroInv" class="form-label">No. Inventario <span class="text-danger">*</span></label>
                     <input type="number" class="form-control form-control-sm" id="NumeroInv"
-                           aria-describedby="NumeroInv" @bind-value="@solicitud.NumeroInventario"
-                           pattern="[0-9]+" title="Solo se permiten números enteros" />
+
+                    aria-describedby="NumeroInv"
+
+                    @oninput="setInventario"
+                    pattern="[0-9]+" title="Solo se permiten números enteros" />
                     <ValidationMessage For="@(() => solicitud.NumeroInventario)" />
 
                     <label for="Descrip" class="form-label">Descripción</label>
@@ -83,7 +86,6 @@
 </Modal>
 
 
-<BienesSalida.Client.Components.TablaProductos/>
 @code {
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
@@ -94,14 +96,30 @@
     private bool showToast = false;
 
     public List<Usuarios>? listaUsua = new();
-    public List<Producto>? listaInv = new();
-    
+    public Producto? producto = new();
+
+    private async Task setInventario(ChangeEventArgs arg)
+    {
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, $"http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={arg.Value.ToString()}&pagina=1");
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var text = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(text);
+        var paginado = JsonConvert.DeserializeObject<Paginado>(text);
+        solicitud.Descripcion = paginado.registros[0].descripcion;
+
+
+        Console.WriteLine(arg.Value.ToString());    
+    }
+
+
 
     protected override async Task OnInitializedAsync()
     {
-        // listaUsua = await ConexionBase.ObtenerUsuarios();
+        //listaUsua = await ConexionBase.ObtenerUsuarios();
       
-                    UpdateTime();
+        UpdateTime();
         StartTimer();
 
         DateTime fechaActual = DateTime.Now;
@@ -165,7 +183,7 @@
         public string? Numero { get; set; }
 
         [Required(ErrorMessage = "No. Inventario requerido, solo se aceptan valores numéricos.")]
-        [RegularExpression(@"^.\d+$", ErrorMessage = "Solo se permiten números enteros.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Solo se permiten números enteros.")]
         public string? NumeroInventario { get; set; }
 
         public string? Descripcion { get; set; }
