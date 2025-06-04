@@ -40,12 +40,10 @@ namespace BienesSalida.Components.Pages
                 if (await reader.ReadAsync())
                 {
                     res = true;
-                    Console.WriteLine("Autenticación exitosa: ID {0}, Nombre {1}", reader.GetInt32(0), reader.GetString(1));
                 }
                 else
                 {
                     res = false;
-                    Console.WriteLine("No se encontraron coincidencias.");
                 }
             }
             catch (SqlException sqlEx)
