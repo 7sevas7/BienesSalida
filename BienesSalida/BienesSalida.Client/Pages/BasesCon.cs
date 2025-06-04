@@ -31,6 +31,7 @@ namespace BienesSalida.Components.Pages
                 {
                     idEmp = Convert.ToInt32(reader["id_empleado"]);
                     nombreEmp = reader["nombre_completo"].ToString();
+                    Console.WriteLine(nombreEmp);
                     res = true;
                 }
                 else
