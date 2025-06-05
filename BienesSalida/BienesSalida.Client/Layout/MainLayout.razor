@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navi
+
 
 <div class="bb-page">
 
@@ -10,9 +12,11 @@
 
     <main>
         <div class="bb-top-row px-4 d-flex justify-content-between" style="background-color:rgb(165, 127, 44);">
-            <Icon Name="IconName.List" role="button" @onclick="ToggleSidebar" Color="IconColor.White" />
+            <Icon Name="IconName.List" role="button" @onclick="ToggleSidebar" Color="IconColor.White" />    
+            <Button @onclick="cerrarSesion">
+                <Icon Name="IconName.PersonRaisedHand" Color="IconColor.Dark" />Cerrar sesión
+            </Button>
         </div>
-
         <article class="content px-4">
             <div class="py-2">@Body</div>
         </article>
@@ -34,14 +38,22 @@
 
     private IEnumerable<NavItem> GetNavItems()
     {
-        navItems = new List<NavItem>
-        {
+        navItems = new List<NavItem>{
             new NavItem { Id = "1", Href = "/home", IconName = IconName.House, Text = "Home"},
-            new NavItem { Id = "2", Href = "/consulta", IconName = IconName.CardList, Text = "Historial"},
-            new NavItem { Id = "3", Href = "/", IconName = IconName.PersonRaisedHand, Text = "Cerrar sesión"}
-        };
-
+            new NavItem { Id = "2", Href = "/consulta", IconName = IconName.CardList, Text = "Historial"}
+        }; 
         return navItems;
+    }
+
+    private void cerrarSesion()
+    {
+        BasesCon.nameEmp = null;  // Resetear variables
+        BasesCon.idEmp = 0;
+
+        StateHasChanged(); // Actualizar la UI
+        Console.WriteLine(BasesCon.nameEmp);
+        Console.WriteLine(BasesCon.idEmp);
+        navi.NavigateTo("/"); // Redirigir al usuario al inicio
     }
 
     private void ToggleSidebar() => sidebar.ToggleSidebar();
