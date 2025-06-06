@@ -12,7 +12,7 @@ PRIMARY KEY (idUserSB));
 
 create table Salida(
 idSal int IDENTITY(1, 1),
-idUserSBFK int NOT NULL,
+idUserEU int NOT NULL,
 fechaHora varchar(255) NOT NULL,
 nombre varchar(255) NOT NULL,
 noSal int NOT NULL,
@@ -24,8 +24,7 @@ area varchar(255) NOT NULL,
 eArea varchar(255) NOT NULL,
 estatus varchar(255) NOT NULL,
 
-PRIMARY KEY (idSal ),
-FOREIGN KEY (idUserSBFK) REFERENCES Usuarios(idUserSB));
+PRIMARY KEY (idSal ));
 
 select * from Usuarios;
 select * from Salida;
@@ -50,6 +49,32 @@ GO
 --DROP PROCEDURE InsercLogin;
 
 -- *************** PA SALIDAS *********************--
+-- INSERCCIÓN
+
+GO
+CREATE PROCEDURE InsercSalida
+    @ID_UserEU int, 
+	@FyH varchar(255), 
+	@Nombre varchar(255), 
+	@nSal int, 
+	@nInv int, 
+	@descrip varchar(255), 
+	@moti varchar(255), 
+	@obser varchar(255), 
+	@area varchar(255), 
+	@encArea varchar(255), 
+	@estatus varchar(255)
+AS
+BEGIN
+    IF NOT EXISTS (SELECT * FROM Salida WHERE noInven = @nInv)
+    BEGIN
+        INSERT INTO Salida (idUserEU,fechaHora,nombre,noSal,noInven,descrip,motivo,observa,area,eArea,estatus)
+        VALUES (@ID_UserEU, @FyH, @Nombre, @nSal, @nInv, @descrip, @moti, @obser, @area, @encArea, @estatus);
+    END; 
+END;
+GO
+
+--CONSULTA
 
 
 

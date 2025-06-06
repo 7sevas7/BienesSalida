@@ -55,7 +55,7 @@ namespace BienesSalida.Client.ConexionesBD
         }
 
         //--------------------------- SALIDAS ---------------------------
-        public async Task salidasAsync(int idUserEU, string FyH, string Nombre, int nSal, int nInv, string descrip, string moti, string obser, 
+        public async Task salidasInserAsync(int idUserEU, string FyH, string Nombre, int nSal, int nInv, string descrip, string moti, string obser, 
                                        string area, string encArea, string estatus)
         {
             try
@@ -77,6 +77,54 @@ namespace BienesSalida.Client.ConexionesBD
                 command.Parameters.AddWithValue("@area", area);
                 command.Parameters.AddWithValue("@encArea", encArea);
                 command.Parameters.AddWithValue("@estatus", estatus);
+
+                await using var reader = await command.ExecuteReaderAsync();
+                await reader.ReadAsync();
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error en SQL Server2: " + sqlEx.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error general2: " + e.Message);
+            }
+        }
+
+        public async Task salidasConsGAsync()
+        {
+            try
+            {
+                await connection.OpenAsync();
+                Console.WriteLine("Conexión establecida correctamente.");
+
+                //USUARIOS
+                var sql = "SELECT * FROM Salida";
+                await using var command = new SqlCommand(sql, connection);
+
+                await using var reader = await command.ExecuteReaderAsync();
+                await reader.ReadAsync();
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error en SQL Server2: " + sqlEx.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error general2: " + e.Message);
+            }
+        }
+
+        public async Task salidasConsEAsync(int idUserEU, string Nombre)
+        {
+            try
+            {
+                await connection.OpenAsync();
+                Console.WriteLine("Conexión establecida correctamente.");
+
+                //USUARIOS
+                var sql = "SELECT * FROM Salida WHERE idUserEU = @idUserEU AND nombre = @Nombre";
+                await using var command = new SqlCommand(sql, connection);
 
                 await using var reader = await command.ExecuteReaderAsync();
                 await reader.ReadAsync();
