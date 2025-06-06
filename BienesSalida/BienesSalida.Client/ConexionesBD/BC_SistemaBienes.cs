@@ -83,11 +83,11 @@ namespace BienesSalida.Client.ConexionesBD
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine("Error en SQL Server2: " + sqlEx.Message);
+                Console.WriteLine("Error en SQL Server3: " + sqlEx.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error general2: " + e.Message);
+                Console.WriteLine("Error general3: " + e.Message);
             }
         }
 
@@ -107,11 +107,11 @@ namespace BienesSalida.Client.ConexionesBD
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine("Error en SQL Server2: " + sqlEx.Message);
+                Console.WriteLine("Error en SQL Server4: " + sqlEx.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error general2: " + e.Message);
+                Console.WriteLine("Error general4: " + e.Message);
             }
         }
 
@@ -131,11 +131,11 @@ namespace BienesSalida.Client.ConexionesBD
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine("Error en SQL Server2: " + sqlEx.Message);
+                Console.WriteLine("Error en SQL Server5: " + sqlEx.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error general2: " + e.Message);
+                Console.WriteLine("Error general5: " + e.Message);
             }
         }
     }
