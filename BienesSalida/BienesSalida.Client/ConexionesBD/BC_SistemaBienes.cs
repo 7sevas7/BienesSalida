@@ -28,7 +28,7 @@ namespace BienesSalida.Client.ConexionesBD
         }
 
         //--------------------------- USUARIOS ---------------------------
-        public async Task consultaAsync(int idUserEU, string Nombre, string Roll)
+        public async Task usuariosAsync(int idUserEU, string Nombre, string Roll)
         {
             try
             {
