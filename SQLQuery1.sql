@@ -30,6 +30,7 @@ FOREIGN KEY (idUserSBFK) REFERENCES Usuarios(idUserSB));
 select * from Usuarios;
 select * from Salida;
 
+-- *************** PA USUARIOS *********************--
 
 GO
 CREATE PROCEDURE InsercLogin
@@ -48,9 +49,11 @@ GO
 
 --DROP PROCEDURE InsercLogin;
 
+-- *************** PA SALIDAS *********************--
 
 
--- BASE USUARIOS --
+
+-- *************** BASE USUARIOS *********************--
 
 use expediente_personas2018;
 

@@ -28,9 +28,9 @@ namespace BienesSalida.Client.ConexionesBD
             {
                 await using var connection = new SqlConnection(connectionString);
                 await connection.OpenAsync();
-
                 Console.WriteLine("Conexión establecida correctamente.");
 
+                //USUARIOS
                 var sql = "EXEC InsercLogin @ID_UserEU, @Nombre, @Roll";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@ID_UserEU", idUserEU);
@@ -39,6 +39,7 @@ namespace BienesSalida.Client.ConexionesBD
 
                 await using var reader = await command.ExecuteReaderAsync();
                 await reader.ReadAsync();
+
             }
             catch (SqlException sqlEx)
             {
@@ -49,5 +50,6 @@ namespace BienesSalida.Client.ConexionesBD
                 Console.WriteLine("Error general2: " + e.Message);
             }
         }
+
     }
 }
