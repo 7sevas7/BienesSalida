@@ -42,7 +42,7 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM Usuarios WHERE idUserEU = @ID_UserEU AND Nombre = @Nombre)
     BEGIN
         INSERT INTO Usuarios (idUserEU, Nombre, Roll)
-        VALUES (@ID_UserEU, @Nombre, @Roll);
+        VALUES (@ID_UserEU, UPPER(@Nombre), @Roll);
     END; 
 END;
 GO
