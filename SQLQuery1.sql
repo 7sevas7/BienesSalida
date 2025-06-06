@@ -29,6 +29,7 @@ PRIMARY KEY (idSal ));
 select * from Usuarios;
 select * from Salida;
 
+--DROP TABLE Usuarios;
 -- *************** PA USUARIOS *********************--
 
 GO
