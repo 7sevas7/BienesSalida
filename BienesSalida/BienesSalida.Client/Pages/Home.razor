@@ -1,4 +1,5 @@
 ﻿@page "/home"
+@using BienesSalida.Client.ConexionesBD
 
 <style>
     .valid.modified:not([type=checkbox]) {
@@ -85,7 +86,7 @@
 
 
 @code {
-    public static string nombreUsuario => BasesCon.nameEmp;
+    public static string nombreUsuario => BasesCon.nameEmp.ToUpper();
 
     private Modal modal = default!;
     private SolicitudBien solicitud = new();

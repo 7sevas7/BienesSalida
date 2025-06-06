@@ -3,11 +3,11 @@ using Microsoft.Identity.Client;
 using System;
 using System.Threading.Tasks;
 
-namespace BienesSalida.Components.Pages
+namespace BienesSalida.Client.ConexionesBD
 {
     public class BasesCon
     {
-        public static Boolean res = false;
+        public static bool res = false;
         public static string nameEmp;
         public static int idEmp;
 
@@ -31,7 +31,7 @@ namespace BienesSalida.Components.Pages
 
                 Console.WriteLine("Conexión establecida correctamente.");
 
-                var sql = "SELECT id_empleado, nombre_completo FROM vw_acceso WHERE RFC = @rfc AND pass = @pass";
+                var sql = "EXEC ConsultaSistemaDeBienes @rfc, @pass";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@rfc", rfc);
                 command.Parameters.AddWithValue("@pass", pass);

@@ -49,6 +49,7 @@
 
     private string? Password = null;
     private string? usuario{set; get;}
+    private string roll = "Usuario";
 
     List<ToastMessage> messages = new List<ToastMessage>();
 
@@ -59,6 +60,8 @@
     private async Task Verificar()
     {
         BasesCon BC = new BasesCon();
+        BC_SistemaBienes BCSB = new BC_SistemaBienes();
+
         await BC.consultaAsync(usuario, Password); // Esperar la ejecución del método asíncrono
 
         if (BasesCon.res == false)
@@ -69,6 +72,7 @@
         }
         else
         {
+            await BCSB.consultaAsync(BasesCon.idEmp, BasesCon.nameEmp, roll);
             navi.NavigateTo("/home");
             Console.WriteLine(BasesCon.nameEmp);
             Console.WriteLine(BasesCon.idEmp);
