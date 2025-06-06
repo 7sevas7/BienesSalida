@@ -48,12 +48,12 @@
 
     private void cerrarSesion()
     {
-        BasesCon.nameEmp = null;  // Resetear variables
-        BasesCon.idEmp = 0;
+        BC_Usuarios.nameEmp = null;  // Resetear variables
+        BC_Usuarios.idEmp = 0;
 
         StateHasChanged(); // Actualizar la UI
-        Console.WriteLine(BasesCon.nameEmp);
-        Console.WriteLine(BasesCon.idEmp);
+        Console.WriteLine(BC_Usuarios.nameEmp);
+        Console.WriteLine(BC_Usuarios.idEmp);
         navi.NavigateTo("/"); // Redirigir al usuario al inicio
     }
 

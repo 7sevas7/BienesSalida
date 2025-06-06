@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BienesSalida.Client.ConexionesBD
 {
-    public class BasesCon
+    public class BC_Usuarios
     {
         public static bool res = false;
         public static string nameEmp;

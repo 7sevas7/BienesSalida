@@ -59,12 +59,12 @@
     }
     private async Task Verificar()
     {
-        BasesCon BC = new BasesCon();
+        BC_Usuarios BC = new BC_Usuarios();
         BC_SistemaBienes BCSB = new BC_SistemaBienes();
 
         await BC.consultaAsync(usuario, Password); // Esperar la ejecución del método asíncrono
 
-        if (BasesCon.res == false)
+        if (BC_Usuarios.res == false)
         {
             titu = "ERROR";
             mensaj = "Falla al iniciar sesión, favor de verificar datos.";
@@ -72,10 +72,10 @@
         }
         else
         {
-            await BCSB.consultaAsync(BasesCon.idEmp, BasesCon.nameEmp, roll);
+            await BCSB.consultaAsync(BC_Usuarios.idEmp, BC_Usuarios.nameEmp, roll);
             navi.NavigateTo("/home");
-            Console.WriteLine(BasesCon.nameEmp);
-            Console.WriteLine(BasesCon.idEmp);
+            Console.WriteLine(BC_Usuarios.nameEmp);
+            Console.WriteLine(BC_Usuarios.idEmp);
         }
     }
 
