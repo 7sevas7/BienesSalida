@@ -91,17 +91,25 @@ namespace BienesSalida.Client.ConexionesBD
             }
         }
 
-        public async Task salidasConsGAsync()
+        public async Task salidasConsGAsync(string roll, int idUserEU, string Nombre)
         {
             try
             {
                 await connection.OpenAsync();
                 Console.WriteLine("Conexión establecida correctamente.");
 
-                //USUARIOS
-                var sql = "SELECT * FROM Salida";
-                await using var command = new SqlCommand(sql, connection);
+                string sql;
 
+                if (roll == "Usuario")
+                {
+                    sql = "SELECT * FROM Salida";
+                }
+                else
+                {
+                    sql = "SELECT * FROM Salida WHERE idUserEU = @idUserEU AND nombre = @Nombre";
+                }
+
+                await using var command = new SqlCommand(sql, connection);
                 await using var reader = await command.ExecuteReaderAsync();
                 await reader.ReadAsync();
             }
@@ -112,30 +120,6 @@ namespace BienesSalida.Client.ConexionesBD
             catch (Exception e)
             {
                 Console.WriteLine("Error general4: " + e.Message);
-            }
-        }
-
-        public async Task salidasConsEAsync(int idUserEU, string Nombre)
-        {
-            try
-            {
-                await connection.OpenAsync();
-                Console.WriteLine("Conexión establecida correctamente.");
-
-                //USUARIOS
-                var sql = "SELECT * FROM Salida WHERE idUserEU = @idUserEU AND nombre = @Nombre";
-                await using var command = new SqlCommand(sql, connection);
-
-                await using var reader = await command.ExecuteReaderAsync();
-                await reader.ReadAsync();
-            }
-            catch (SqlException sqlEx)
-            {
-                Console.WriteLine("Error en SQL Server5: " + sqlEx.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error general5: " + e.Message);
             }
         }
     }
