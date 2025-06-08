@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace BienesSalida.Client.ConexionesBD
+namespace BienesSalida.ConexionesBD
 {
     public class BC_SistemaBienes
     {

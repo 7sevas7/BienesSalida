@@ -1,4 +1,3 @@
-using BienesSalida.Client.Pages;
 using BienesSalida.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,5 +32,5 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BienesSalida.Client._Imports).Assembly);
 app.MapControllers();
-
+app.UseCors(cors => cors.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 app.Run();

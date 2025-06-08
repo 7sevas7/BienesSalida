@@ -1,8 +1,8 @@
 ﻿@page "/"
-
+@using System.Diagnostics
+@inject HttpClient client
 @inject NavigationManager navi
 @layout LoginLayout
-
 
 <div class="blur-background">
     <div class="card shadow-lg w-50 m-3" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color:white;">
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                         </EditForm>*@
-                        
+
                     </div>
                     <div class="mb-3 w-50 text-center p-2 mx-auto">
                         <Button Color="ButtonColor.Success" @onclick="Verificar">Enviar</Button>
@@ -59,6 +59,30 @@
     }
     private async Task Verificar()
     {
+        //var client = new HttpClient();
+        //var request = new HttpRequestMessage(HttpMethod.Post, "api/acceso/login");
+        var content = new MultipartFormDataContent();
+        content.Add(new StringContent(usuario), "nombre");
+        content.Add(new StringContent(Password), "password");      
+        var response = await client.PostAsync(navi.Uri+"api/acceso/login", content);
+        // response.EnsureSuccessStatusCode();        
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            titu = "ERROR";
+            mensaj = "Falla al iniciar sesión, favor de verificar datos.";
+            ShowMessage(ToastType.Danger);
+        }
+        else
+        {
+            navi.NavigateTo("/home");
+        }
+
+        Console.WriteLine(await response.Content.ReadAsStringAsync());
+
+        
+        
+
+        /*
         BC_Usuarios BC = new BC_Usuarios();
         BC_SistemaBienes BCSB = new BC_SistemaBienes();
 
@@ -77,6 +101,7 @@
             Console.WriteLine(BC_Usuarios.nameEmp);
             Console.WriteLine(BC_Usuarios.idEmp);
         }
+        */
     }
 
     private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
