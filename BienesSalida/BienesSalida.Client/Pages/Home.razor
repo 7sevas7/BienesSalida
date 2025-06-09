@@ -132,6 +132,8 @@
 
         editContext = new EditContext(solicitud);
         nombreUsuario = await localService.GetItemAsync("userBienes");
+
+        Console.WriteLine("EL USUARIO ES: " + nombreUsuario);
     }
 
 
