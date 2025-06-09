@@ -19,9 +19,8 @@ namespace BienesSalida.Share.ModelsPost
 
         public string? Numero { get; set; }
 
-        [Required(ErrorMessage = "No. Inventario requerido, solo se aceptan valores numéricos.")]
-        [RegularExpression(@"^\d+$", ErrorMessage = "Solo se permiten números enteros.")]
-        public string? NumeroInventario { get; set; }
+
+        public int? NumeroInventario { get; set; }
 
         public string? Descripcion { get; set; }
 
