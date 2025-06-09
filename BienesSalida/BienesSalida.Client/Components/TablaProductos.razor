@@ -68,7 +68,8 @@ Responsive="true">
     {
         if (nInventario is not null) {
             var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, $"http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario.ToString()}");
+                                                                   //http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
             var response = await client.SendAsync(request);
             //response.EnsureSuccessStatusCode();
             var text = await response.Content.ReadAsStringAsync();

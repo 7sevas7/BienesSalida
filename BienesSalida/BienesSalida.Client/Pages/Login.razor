@@ -41,12 +41,14 @@
                     </div>
                 </div>
             </div>
-        </div>       
+        </div>
     </div>
     <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 </div>
 
 @code {
+
+
 
     private string? Password { set; get; } = "";
     private string? usuario { set; get; } = "";
@@ -85,15 +87,16 @@
         var content = new MultipartFormDataContent();
 
         content.Add(new StringContent(usuario), "nombre");
-        content.Add(new StringContent(Password), "password");      
-        var response = await client.PostAsync(navi.Uri+"api/acceso/login", content);
-        // response.EnsureSuccessStatusCode();        
+        content.Add(new StringContent(Password), "password");
+        var response = await client.PostAsync(navi.Uri + "api/acceso/login", content);
+        // response.EnsureSuccessStatusCode();
         Console.WriteLine(await response.Content.ReadAsStringAsync());
         var text = await response.Content.ReadAsStringAsync();
         var session = JsonConvert.DeserializeObject<SessionUsuario>(text);
-        localService.SetItemAsync("tokenBienes",session.token);
-        localService.SetItemAsync("userBienes", session.usuario);
-        localService.SetItemAsync("idUserBienes", session.idUser.ToString());
+        await localService.InitializeAsync();
+        await localService.SetItemAsync("tokenBienes", session.token);
+        await localService.SetItemAsync("userBienes", session.usuario);
+        await localService.SetItemAsync("idUserBienes", session.idUser.ToString());
 
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -136,12 +139,12 @@
 
     private ToastMessage CreateToastMessage(ToastType toastType)
     => new ToastMessage
-        {
-            Type = toastType,
-            Title = titu,
-            HelpText = $"{DateTime.Now}",
-            Message = mensaj,
-        };
+    {
+        Type = toastType,
+        Title = titu,
+        HelpText = $"{DateTime.Now}",
+        Message = mensaj,
+    };
 
     public CaptchaGenerator Codigo = new CaptchaGenerator();
     public string bien, mal, capt = "";
@@ -157,7 +160,7 @@
         return base.OnInitializedAsync();
     }
 
- 
+
     public void ValidacionCapt()
     {
         if (Codigo.code.Trim().Equals(capt.Trim(), StringComparison.OrdinalIgnoreCase))

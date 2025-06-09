@@ -31,6 +31,5 @@ namespace BienesSalida.Share.ModelsPost
         [Required(ErrorMessage = "Observaciones requerido.")]
         public string? Observaciones { get; set; }
 
-        public Producto producto { set; get; }
     }
 }

@@ -3,15 +3,15 @@
 @inject LocalStorageService localService
 <style>
     .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+        outline: 1px solid #26b050;
     }
 
     .invalid {
-    outline: 1px solid red;
+        outline: 1px solid red;
     }
 
     .validation-message {
-    color: red;
+        color: red;
     }
 </style>
 
@@ -35,7 +35,7 @@
 -->
 <h3 class="m-5 custom-text">Añadir Activo Fijo(Articulo)</h3>
 
-<TablaProductos AddActivo="OnShowModalClick"/>
+<TablaProductos AddActivo="OnShowModalClick" />
 
 <Modal @ref="modal" title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
     <BodyTemplate>
@@ -56,10 +56,9 @@
                     <NumberInput TValue="int" @bind-Value="@contNo" Disabled />
 
                     <label for="NumeroInv" class="form-label">No. Inventario <span class="text-danger">*</span></label>
-                   
-                    <NumberInput  class="form-control form-control-sm"                     
-                    @bind-Value="@solicitud.NumeroInventario"
-                     />
+
+                    <NumberInput class="form-control form-control-sm"
+                                 @bind-Value="@solicitud.NumeroInventario" />
                     <ValidationMessage For="@(() => solicitud.NumeroInventario)" />
 
                     <label for="Descrip" class="form-label">Descripción</label>
@@ -115,7 +114,7 @@
         solicitud.Descripcion = paginado.registros[0].descripcion;
 
 
-        Console.WriteLine(arg.Value.ToString());    
+        Console.WriteLine(arg.Value.ToString());
     }
 
     protected override async Task OnInitializedAsync()
@@ -131,7 +130,9 @@
         fyh = fechaFormateada + " " + horaFormateada;
 
         editContext = new EditContext(solicitud);
+        await localService.InitializeAsync();
         nombreUsuario = await localService.GetItemAsync("userBienes");
+
         Console.WriteLine("EL USUARIO ES: " + nombreUsuario);
     }
 
@@ -153,9 +154,9 @@
         InvokeAsync(StateHasChanged); // Forzar actualización en la UI
     }
 
-    private async Task OnShowModalClick(Producto producto )
+    private async Task OnShowModalClick(Producto producto)
     {
-        solicitud.producto = producto;
+
         solicitud.Descripcion = producto.descripcion;
         await modal.ShowAsync();
     }
@@ -169,7 +170,7 @@
             await Task.Delay(3000);
             showToast = false;
             StateHasChanged();
-            
+
         }
         else
         {
@@ -180,6 +181,6 @@
         }
     }
 
-    
+
 
 }
