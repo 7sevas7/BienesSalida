@@ -16,7 +16,7 @@
                 <div class="card-body custom-text " style="color:black">
                     <div class="mb-3 text-center w-50 mx-auto">
                         <label for="User" class="form-label p-2">Usuario</label>
-                        <input @bind="usuario" type="text" class="form-control shadow-lg p-2" id="User" aria-descrgit statusibedby="UserHelp" placeholder="Usuario">
+                        <input @bind="usuario" type="text" class="form-control shadow-lg p-2" id="User" aria-describedby="UserHelp" placeholder="Usuario" style="text-transform: uppercase;">
                         <label for="Pass" class="form-label p-2">Contraseña</label>
                         <PasswordInput Value="@Password" ValueExpression="() => Password" ValueChanged="(value) => PasswordChanged(value)" placeholder="Contraseña" class="shadow-lg p-2" />
 
@@ -47,6 +47,8 @@
 </div>
 
 @code {
+
+
 
     private string? Password { set; get; } = "";
     private string? usuario { set; get; } = "";
@@ -83,6 +85,7 @@
         }
 
         var content = new MultipartFormDataContent();
+
         content.Add(new StringContent(usuario), "nombre");
         content.Add(new StringContent(Password), "password");      
         var response = await client.PostAsync(navi.Uri+"api/acceso/login", content);
