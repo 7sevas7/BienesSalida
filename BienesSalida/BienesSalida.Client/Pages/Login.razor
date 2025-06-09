@@ -3,6 +3,7 @@
 @inject HttpClient client
 @inject NavigationManager navi
 @layout LoginLayout
+@inject LocalStorageService localService
 
 <div class="blur-background">
     <div class="card shadow-lg w-50 m-3" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color:white;">
@@ -36,7 +37,7 @@
 
                     </div>
                     <div class="mb-3 w-50 text-center p-2 mx-auto">
-                        <Button Color="ButtonColor.Success" @onclick="Verificar">Enviar</Button>
+                        <Button Color="ButtonColor.Success" @onclick="Verificar" Disabled="@activateLogin">Enviar</Button>
                     </div>
                 </div>
             </div>
@@ -47,9 +48,10 @@
 
 @code {
 
-    private string? Password = null;
-    private string? usuario{set; get;}
+    private string? Password { set; get; } = "";
+    private string? usuario { set; get; } = "";
     private string roll = "Usuario";
+    private bool activateLogin { set; get; } = false;
 
     List<ToastMessage> messages = new List<ToastMessage>();
 
@@ -59,28 +61,51 @@
     }
     private async Task Verificar()
     {
+        StateHasChanged();
         //var client = new HttpClient();
         //var request = new HttpRequestMessage(HttpMethod.Post, "api/acceso/login");
+        activateLogin = true;
+        if (usuario == null || usuario == "")
+        {
+            titu = "ERROR";
+            mensaj = "Ingrese el usuario.";
+            ShowMessage(ToastType.Danger);
+            activateLogin = false;
+            return;
+        }
+        if (Password == null || Password == "")
+        {
+            titu = "ERROR";
+            mensaj = "Ingresa tu contraseña.";
+            ShowMessage(ToastType.Danger);
+            activateLogin = false;
+            return;
+        }
+
         var content = new MultipartFormDataContent();
         content.Add(new StringContent(usuario), "nombre");
         content.Add(new StringContent(Password), "password");      
         var response = await client.PostAsync(navi.Uri+"api/acceso/login", content);
         // response.EnsureSuccessStatusCode();        
+        Console.WriteLine(await response.Content.ReadAsStringAsync());
+        var text = await response.Content.ReadAsStringAsync();
+        var session = JsonConvert.DeserializeObject<SessionUsuario>(text);
+        localService.SetItemAsync("tokenBienes",session.token);
+        localService.SetItemAsync("userBienes", session.usuario);
+        localService.SetItemAsync("idUserBienes", session.idUser.ToString());
+
+
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
             titu = "ERROR";
             mensaj = "Falla al iniciar sesión, favor de verificar datos.";
             ShowMessage(ToastType.Danger);
+            activateLogin = false;
         }
         else
         {
             navi.NavigateTo("/home");
         }
-
-        Console.WriteLine(await response.Content.ReadAsStringAsync());
-
-        
-        
 
         /*
         BC_Usuarios BC = new BC_Usuarios();
@@ -93,14 +118,14 @@
             titu = "ERROR";
             mensaj = "Falla al iniciar sesión, favor de verificar datos.";
             ShowMessage(ToastType.Danger);
-        }
+            }
         else
         {
             await BCSB.usuariosAsync(BC_Usuarios.idEmp, BC_Usuarios.nameEmp, roll);
             navi.NavigateTo("/home");
             Console.WriteLine(BC_Usuarios.nameEmp);
             Console.WriteLine(BC_Usuarios.idEmp);
-        }
+            }
         */
     }
 
@@ -131,6 +156,7 @@
         return base.OnInitializedAsync();
     }
 
+ 
     public void ValidacionCapt()
     {
         if (Codigo.code.Trim().Equals(capt.Trim(), StringComparison.OrdinalIgnoreCase))

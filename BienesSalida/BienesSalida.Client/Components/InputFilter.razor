@@ -1,0 +1,81 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<style>
+    .valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+    }
+
+    .invalid {
+    outline: 1px solid red;
+    }
+
+    .validation-message {
+    color: red;
+    }
+</style>
+
+<EditForm EditContext="@editContext" OnValidSubmit="HandleOnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container row form-group mb-3">
+
+
+        <div class="col-9">
+            <label class="col-form-label">Número de Inventario <span class="text-danger">*</span></label>
+            <NumberInput @bind-Value="@activoFijo.noInventario" Placeholder="Ingresa el número de inventario de su articulo" />
+            <ValidationMessage For="@(() => activoFijo.noInventario)" />               
+        </div>
+
+        <div class="col-3 text-bottom " style="padding-top:2.3rem;">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">
+                <Icon Name="IconName.Search" />
+            </Button>
+        </div>
+
+
+
+    </div>
+
+
+</EditForm>
+
+@code {
+    private ActivoFijo activoFijo = new();
+    private EditContext? editContext;
+
+
+    [Parameter]
+    public Func<int?,Task> BuscarActivo { set; get; }
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(activoFijo);
+        base.OnInitialized();
+    }
+
+    public async Task HandleOnValidSubmit()
+    {
+        // additional check
+        if (editContext.Validate())
+        {
+            // do something
+            // submit the form
+            Console.WriteLine("Form submitted successfully");
+            await BuscarActivo(activoFijo.noInventario);
+
+        }
+    }
+
+    private void ResetForm()
+    {
+        activoFijo = new();
+        editContext = new EditContext(activoFijo);
+    }
+
+    public class ActivoFijo
+    {
+        [Required(ErrorMessage = "Número de inventario requerido")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debe ser un número entero positivo")]
+        public int? noInventario { get; set; }
+
+    }
+}

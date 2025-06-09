@@ -1,6 +1,6 @@
 ﻿@page "/home"
 
-
+@inject LocalStorageService localService
 <style>
     .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
@@ -17,19 +17,25 @@
 
 <PageTitle>Home</PageTitle>
 <h1 class="text-center m-5 custom-text"> SOLICITUD DE SALIDA DE BIENES </h1>
+<div class="container row w-100">
+    <div class="mb-3 custom-text col-3">
+        <h5 for="Nombre" class="form-label m-2">Nombre: @nombreUsuario</h5>
+        <h5 class="label label-default m-2">Fecha actual: @fechaFormateada</h5>
+        <h5 class="label label-default m-2">Hora actual: @horaFormateada</h5>
+    </div>
+    <div class="col-9">
+        <TablaSolicitud />
 
-<div class="mb-3 mx-auto custom-text m-3">
-    <h5 for="Nombre" class="form-label m-2">Nombre: @nombreUsuario</h5>
-    <h5 class="label label-default m-2">Fecha actual: @fechaFormateada</h5>
-    <h5 class="label label-default m-2">Hora actual: @horaFormateada</h5>
+    </div>
 </div>
-
+<!--
 <div class="mb-3 w-50 mx-auto text-center custom-text">
-    <Button Color="ButtonColor.Danger" @onclick="OnShowModalClick" Outline="true" Class="shadow-lg">Registrar bien a salir</Button>
+<Button Color="ButtonColor.Danger" @onclick="OnShowModalClick" Outline="true" Class="shadow-lg">Registrar bien a salir</Button>
 </div>
+-->
+<h3 class="m-5 custom-text">Añadir Activo Fijo(Articulo)</h3>
 
-<h3 class="m-5 custom-text">HISTORIAL DEL USUARIO</h3>
-
+<TablaProductos AddActivo="OnShowModalClick"/>
 
 <Modal @ref="modal" title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
     <BodyTemplate>
@@ -50,12 +56,10 @@
                     <NumberInput TValue="int" @bind-Value="@contNo" Disabled />
 
                     <label for="NumeroInv" class="form-label">No. Inventario <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control form-control-sm" id="NumeroInv"
-
-                    aria-describedby="NumeroInv"
-
-                    @oninput="setInventario"
-                    pattern="[0-9]+" title="Solo se permiten números enteros" />
+                   
+                    <NumberInput  class="form-control form-control-sm"                     
+                    @bind-Value="@solicitud.NumeroInventario"
+                     />
                     <ValidationMessage For="@(() => solicitud.NumeroInventario)" />
 
                     <label for="Descrip" class="form-label">Descripción</label>
@@ -84,9 +88,8 @@
     </FooterTemplate>
 </Modal>
 
-
 @code {
-    public static string nombreUsuario = "";
+    public string nombreUsuario = "";
 
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
@@ -95,9 +98,10 @@
     private int contNo = 1;
     private System.Timers.Timer? timer;
     private bool showToast = false;
-
     public List<Usuarios>? listaUsua = new();
     public Producto? producto = new();
+
+    private TablaSolicitud tablaSolicitud = default!;
 
     private async Task setInventario(ChangeEventArgs arg)
     {
@@ -114,12 +118,10 @@
         Console.WriteLine(arg.Value.ToString());    
     }
 
-
-
     protected override async Task OnInitializedAsync()
     {
         //listaUsua = await ConexionBase.ObtenerUsuarios();
-      
+
         UpdateTime();
         StartTimer();
 
@@ -129,6 +131,7 @@
         fyh = fechaFormateada + " " + horaFormateada;
 
         editContext = new EditContext(solicitud);
+        nombreUsuario = await localService.GetItemAsync("userBienes");
     }
 
 
@@ -149,8 +152,10 @@
         InvokeAsync(StateHasChanged); // Forzar actualización en la UI
     }
 
-    private async Task OnShowModalClick()
+    private async Task OnShowModalClick(Producto producto )
     {
+        solicitud.producto = producto;
+        solicitud.Descripcion = producto.descripcion;
         await modal.ShowAsync();
     }
 
@@ -163,6 +168,7 @@
             await Task.Delay(3000);
             showToast = false;
             StateHasChanged();
+            
         }
         else
         {
@@ -173,27 +179,6 @@
         }
     }
 
-    public class SolicitudBien
-    {
-        [Required(ErrorMessage = "Área requerida.")]
-        public string? Area { get; set; }
-
-        [Required(ErrorMessage = "Encargado de área requerido.")]
-        public string? EncargadoArea { get; set; }
-
-        public string? Numero { get; set; }
-
-        [Required(ErrorMessage = "No. Inventario requerido, solo se aceptan valores numéricos.")]
-        [RegularExpression(@"^\d+$", ErrorMessage = "Solo se permiten números enteros.")]
-        public string? NumeroInventario { get; set; }
-
-        public string? Descripcion { get; set; }
-
-        [Required(ErrorMessage = "Motivo de salida requerido.")]
-        public string? MotivoSalida { get; set; }
-
-        [Required(ErrorMessage = "Observaciones requerido.")]
-        public string? Observaciones { get; set; }
-    }
+    
 
 }

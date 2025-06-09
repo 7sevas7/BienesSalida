@@ -1,0 +1,31 @@
+﻿<Grid @ref="grid"
+TItem="SolicitudBien"
+Class="table table-hover table-bordered table-striped mt-3"
+Data="solicitudes">
+    <GridColumns>
+        <GridColumn TItem="SolicitudBien" HeaderText="Id" PropertyName="Id">
+            @context.producto.bienID            
+        </GridColumn>
+    </GridColumns>
+</Grid>
+
+@code {
+    Grid<SolicitudBien> grid = default!;
+    private List<SolicitudBien>? solicitudes;
+
+    protected override void OnInitialized()
+    {
+        solicitudes = new List<SolicitudBien>();
+    }
+
+    private async Task AddEmployee(SolicitudBien solicitud)
+    {
+        // for the same employees collection, we are adding an object
+        // explicit grid refresh required
+        solicitudes!.Add(solicitud);
+        await grid.RefreshDataAsync();
+    }
+
+    
+
+}

@@ -1,14 +1,8 @@
-using Microsoft.AspNetCore.Components;
+using BienesSalida.Client.Pages;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddBlazorBootstrap();
-/*builder.Services.AddScoped(sp =>
-{
-    var navigationManager = sp.GetRequiredService<NavigationManager>();
-    return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };
-});*/
-builder.Services.AddScoped( sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
-
-Console.WriteLine(builder.HostEnvironment.BaseAddress);
+builder.Services.AddScoped<HttpClient>( sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<LocalStorageService>();
 await builder.Build().RunAsync();
