@@ -49,7 +49,6 @@
                     <TextInput @bind-Value="@solicitud.Area"/>
                     <ValidationMessage For="@(() => solicitud.Area)" />
 
-
                    <label class="form-label">Encargado de Área <span class="text-danger">*</span></label>
                     <TextInput @bind-Value="@solicitud.EncargadoArea"/>
                     <ValidationMessage For="@(()=>solicitud.EncargadoArea)"/>
@@ -59,45 +58,17 @@
 
                     <label class="form-label">No. de Inventario</label>
                     <NumberInput @bind-Value="@solicitud.NumeroInventario" Disabled="true"/>
-                    <!--
-                    <label for="Descrip" class="form-label">Descripción</label>
-                    <TextAreaInput @bind-Value="@solicitud.Descripcion" Rows="3" Disabled="true" />
-                    
-                    <label for="Motivo" class="form-label">Motivo de salida <span class="text-danger">*</span></label>
-                    <TextAreaInput @bind-Value="@solicitud.MotivoSalida" Rows="3" />
-                    <ValidationMessage For="@(() => solicitud.MotivoSalida)" />
-                        
-                    <label for="Observa" class="form-label">Observaciones <span class="text-danger">*</span></label>
-                    <TextAreaInput @bind-Value="@solicitud.Observaciones" Rows="3" />
-                    <ValidationMessage For="@(() => solicitud.Observaciones)" />
-                        -->
-                    
-                    <!--<label for="Area" class="form-label">Área <span class="text-danger">*</span></label>
-                    <TextInput  Class="form-control form-control-sm"   Value="@solicitud.Area" />
-                    <ValidationMessage For="@(() => solicitud.Area)" />
 
-                    <label for="EncargadoArea" class="form-label">Encargado de Área <span class="text-danger">*</span></label>
-                    <TextInput Class="form-control form-control-sm"  Value="@solicitud.EncargadoArea" />
-                    <ValidationMessage For="@(() => solicitud.EncargadoArea)" />
+                    <label class="form-label">Descripcion</label>
+                    <TextAreaInput @bind-Value="@solicitud.Descripcion" Disabled="true" />
 
-                    <label for="Numero" class="form-label">No.</label>
-                    <NumberInput  Value="@contNo" Disabled="true" />
-
-                    <label for="NumeroInv" class="form-label">No. Inventario <span class="text-danger">*</span></label>                    
-                    <NumberInput Class="form-control form-control-sm"
-                                 Value="@solicitud.NumeroInventario"  Disabled="true"/>                    
-
-                    <label for="Descrip" class="form-label">Descripción</label>
-                    <TextAreaInput Value="@solicitud.Descripcion" Rows="3" Disabled="true" />
-
-                    <label for="Motivo" class="form-label">Motivo de salida <span class="text-danger">*</span></label>
-                    <TextAreaInput Value="@solicitud.MotivoSalida" Rows="3" />
+                    <label class="form-label">Motivo de salida <span class="text-danger">*</span></label>
+                    <TextAreaInput @bind-Value="@solicitud.MotivoSalida"/>
                     <ValidationMessage For="@(() => solicitud.MotivoSalida)" />
 
-                    <label for="Observa" class="form-label">Observaciones <span class="text-danger">*</span></label>
-                    <TextAreaInput Value="@solicitud.Observaciones" Rows="3" />
+                    <label class="form-label">Observaciones<span class="text-danger">*</span></label>
+                    <TextAreaInput @bind-Value="@solicitud.Observaciones"/>
                     <ValidationMessage For="@(() => solicitud.Observaciones)" />
-                     -->   
                 </div>
             </div>
         </EditForm>
