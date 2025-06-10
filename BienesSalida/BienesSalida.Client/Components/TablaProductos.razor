@@ -34,6 +34,7 @@ Responsive="true">
 </Grid>
 
 @code {
+
     private IEnumerable<Producto> productos = default!;
     private Paginado? paginado { set; get; } = new();
 
@@ -66,16 +67,24 @@ Responsive="true">
     }
     private async Task GetActivoFijoFilter(int? nInventario )
     {
-        if (nInventario is not null) {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, $"http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario.ToString()}");
-                                                                   //http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
-            var response = await client.SendAsync(request);
-            //response.EnsureSuccessStatusCode();
-            var text = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(text);
-            paginado = JsonConvert.DeserializeObject<Paginado>(text);
-            StateHasChanged();
+        try
+        {
+            if (nInventario is not null)
+            {
+                var client = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Get, $"http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario.ToString()}");
+                //http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
+                var response = await client.SendAsync(request);
+                //response.EnsureSuccessStatusCode();
+                var text = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(text);
+                paginado = JsonConvert.DeserializeObject<Paginado>(text);
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Ocurrió un error inesperado: " + e.Message);
         }
         //return paginado.registros;
     }
