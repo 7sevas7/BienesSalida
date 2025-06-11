@@ -44,11 +44,11 @@
             <div class="mb-3 w-100 custom-text" style="background-color:#e3e3e3; padding:1rem;">
                 <div class="w-75 mx-auto">
                     <label class="form-label">Área <span class="text-danger">*</span></label>
-                    <TextInput @bind-Value="@solicitud.Area"/>
+                    <TextInput @bind-Value="@solicitud.Area" Style="text-transform: uppercase"/>
                     <ValidationMessage For="@(() => solicitud.Area)" />
 
                    <label class="form-label">Encargado de Área <span class="text-danger">*</span></label>
-                    <TextInput @bind-Value="@solicitud.EncargadoArea"/>
+                    <TextInput @bind-Value="@solicitud.EncargadoArea" Style="text-transform: uppercase" />
                     <ValidationMessage For="@(()=>solicitud.EncargadoArea)"/>
 
                     <label class="form-label">No.</label>
@@ -61,11 +61,11 @@
                     <TextAreaInput @bind-Value="@solicitud.Descripcion" Disabled="true" />
 
                     <label class="form-label">Motivo de salida <span class="text-danger">*</span></label>
-                    <TextAreaInput @bind-Value="@solicitud.MotivoSalida"/>
+                    <TextAreaInput @bind-Value="@solicitud.MotivoSalida" Style="text-transform: uppercase" />
                     <ValidationMessage For="@(() => solicitud.MotivoSalida)" />
 
                     <label class="form-label">Observaciones<span class="text-danger">*</span></label>
-                    <TextAreaInput @bind-Value="@solicitud.Observaciones"/>
+                    <TextAreaInput @bind-Value="@solicitud.Observaciones" Style="text-transform: uppercase" />
                     <ValidationMessage For="@(() => solicitud.Observaciones)" />
                 </div>
             </div>
