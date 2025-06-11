@@ -2,14 +2,33 @@
 TItem="SolicitudBien"
 Class="table table-hover table-bordered table-striped mt-3"
 Data="solicitudes">
+
     <GridColumns>
-        <GridColumn TItem="SolicitudBien" HeaderText="Id" PropertyName="Id">
-            @context.Descripcion         
+        <GridColumn TItem="SolicitudBien" HeaderText="Fecha">
+            @context
+        </GridColumn>
+        <GridColumn TItem="SolicitudBien" HeaderText="No.">
+            @context.Numero
+        </GridColumn>
+        <GridColumn TItem="SolicitudBien" HeaderText="No. Inventario">
+            @context.NumeroInventario
+        </GridColumn>
+        <GridColumn TItem="SolicitudBien" HeaderText="Descripción">
+            @context.Descripcion
+        </GridColumn>
+        <GridColumn TItem="SolicitudBien" HeaderText="Motivo de salida">
+            @context.MotivoSalida
+        </GridColumn>
+        <GridColumn TItem="SolicitudBien" HeaderText="Observaciones">
+            @context.Observaciones
         </GridColumn>
     </GridColumns>
 </Grid>
 
 @code {
+    [Parameter]
+    public List<SolicitudBien> Solicitudes { get; set; } = new();
+
     Grid<SolicitudBien> grid = default!;
     private List<SolicitudBien>? solicitudes;
 
