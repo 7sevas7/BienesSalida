@@ -81,7 +81,7 @@
 
     </BodyTemplate>
     <FooterTemplate>
-        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" >Enviar</Button>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" @onclick="ValidateForm">Enviar</Button>
     </FooterTemplate>
 </Modal>
 
@@ -158,7 +158,7 @@
         await modal.ShowAsync();
     }
 
- 
+
 
     private async Task ValidateForm()
     {
@@ -172,7 +172,7 @@
         }
         else
         {
-          
+
             tablaSolicitud.AddSolicitud(solicitud);
 
             // ✅ Mantener la lógica original
@@ -180,6 +180,7 @@
             editContext = new EditContext(solicitud);
             contNo++;
             await modal.HideAsync();
+            StateHasChanged();
         }
     }
 

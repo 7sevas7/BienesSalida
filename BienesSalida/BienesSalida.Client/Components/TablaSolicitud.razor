@@ -25,27 +25,9 @@
     </GridColumns>
 </Grid>
 
-@if (DatosModal != null && DatosModal.Any())
-{
-    <h3>Datos Capturados</h3>
-    <ul>
-        @foreach (var dato in DatosModal)
-        {
-            <li>@dato</li>
-        }
-    </ul>
-}
-else
-{
-    <p>No hay datos disponibles.</p>
-}
-
 @code {
     [Parameter]
     public List<SolicitudBien> Solicitudes { get; set; } = new();
-
-    [Parameter]
-    public List<string> DatosModal { get; set; } = new();
 
     Grid<SolicitudBien> grid = default!;
     private List<SolicitudBien>? solicitudes;
