@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\BienesSalida.Client\Components\Component.razor" Link="Component.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\BienesSalida.Share\BienesSalida.Share.csproj" />
     <ProjectReference Include="..\BienesSalida.Client\BienesSalida.Client.csproj" />
     <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />

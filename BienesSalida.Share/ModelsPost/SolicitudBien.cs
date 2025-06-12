@@ -10,6 +10,8 @@ namespace BienesSalida.Share.ModelsPost
 {
     public class SolicitudBien
     {
+        public string? Nombre { get; set; }
+        public string? Fecha { get; set; }
 
         [Required(ErrorMessage = "Área requerida.")]
         public string? Area { get; set; }
