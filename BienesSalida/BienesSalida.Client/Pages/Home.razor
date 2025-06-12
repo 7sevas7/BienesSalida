@@ -33,7 +33,7 @@
 </div>
 -->
 <h3 class="m-5 custom-text">Activos solicitados a salir</h3>
-<TablaSolicitud/>
+<TablaSolicitud @ref="@tablaSolicitud"/>
 <Modal @ref="modal" Title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
     <BodyTemplate>
         
@@ -81,7 +81,7 @@
 
     </BodyTemplate>
     <FooterTemplate>
-        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" @onclick="ValidateForm">Enviar</Button>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" >Enviar</Button>
     </FooterTemplate>
 </Modal>
 
@@ -97,6 +97,8 @@
     private bool showToast = false;
     public List<Usuarios>? listaUsua = new();
     public Producto? producto = new();
+
+
     private TablaSolicitud tablaSolicitud = default!;
 
     private async Task setInventario(ChangeEventArgs arg)
@@ -152,10 +154,11 @@
 
         solicitud.Descripcion = producto.descripcion;
         solicitud.NumeroInventario = producto.bienID;
+        solicitud.producto = producto;
         await modal.ShowAsync();
     }
 
-    private List<string> datosModal = new();
+ 
 
     private async Task ValidateForm()
     {
@@ -169,21 +172,8 @@
         }
         else
         {
-            // ✅ Guardar los datos antes de resetear el formulario
-            datosModal = new List<string>
-        {
-            // nombreUsuario,
-            // fyh.ToString(),
-            solicitud.Area,
-            solicitud.EncargadoArea,
-            contNo.ToString(),
-            solicitud.NumeroInventario.ToString(),
-            solicitud.Descripcion,
-            solicitud.MotivoSalida,
-            solicitud.Observaciones
-        };
-
-            Console.WriteLine($"Datos almacenados: {string.Join(", ", datosModal)}");
+          
+            tablaSolicitud.AddSolicitud(solicitud);
 
             // ✅ Mantener la lógica original
             solicitud = new SolicitudBien();

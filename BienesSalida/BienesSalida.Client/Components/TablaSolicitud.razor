@@ -55,7 +55,7 @@ else
         solicitudes = new List<SolicitudBien>();
     }
 
-    private async Task AddSolicitud(SolicitudBien solicitud)
+    public async Task AddSolicitud(SolicitudBien solicitud)
     {
         solicitudes!.Add(solicitud);
         await grid.RefreshDataAsync();
