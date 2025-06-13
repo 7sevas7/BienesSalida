@@ -1,6 +1,6 @@
 -- BASE SISTEMA DE VIENES--
 
-create database SistemaBien
+--create database SistemaBien
 use SistemaBien
 
 create table Usuarios(
@@ -76,8 +76,25 @@ END;
 GO
 
 --CONSULTA
+GO
+CREATE PROCEDURE ObtenerSalida
+    @Roll NVARCHAR(50),
+    @idUserEU INT,
+    @Nombre NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
-
+    IF @Roll = 'Administrador'
+		BEGIN
+			SELECT * FROM Salida;
+		END
+    ELSE
+		BEGIN
+			SELECT * FROM Salida WHERE idUserEU = @idUserEU AND nombre = @Nombre;
+		END
+END
+GO
 
 -- *************** BASE USUARIOS *********************--
 

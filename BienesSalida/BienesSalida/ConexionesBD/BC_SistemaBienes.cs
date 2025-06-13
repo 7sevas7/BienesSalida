@@ -97,19 +97,13 @@ namespace BienesSalida.ConexionesBD
             {
                 await connection.OpenAsync();
                 Console.WriteLine("Conexión establecida correctamente.");
-
                 string sql;
-
-                if (roll == "Usuario")
-                {
-                    sql = "SELECT * FROM Salida";
-                }
-                else
-                {
-                    sql = "SELECT * FROM Salida WHERE idUserEU = @idUserEU AND nombre = @Nombre";
-                }
-
+                sql = "EXECT ObtenerSalida @Roll, @idUserEU, @Nombre";
                 await using var command = new SqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@Roll", roll);
+                command.Parameters.AddWithValue("@idUserEU", idUserEU);
+                command.Parameters.AddWithValue("@Nombre", Nombre);
+
                 await using var reader = await command.ExecuteReaderAsync();
                 await reader.ReadAsync();
             }

@@ -1,6 +1,7 @@
 ﻿@page "/home"
-
+@inject IConfiguration config
 @inject LocalStorageService localService
+
 <style>
     .valid.modified:not([type=checkbox]) {
         outline: 1px solid #26b050;
@@ -104,7 +105,7 @@
     private async Task setInventario(ChangeEventArgs arg)
     {
         var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"http://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={arg.Value.ToString()}&pagina=1");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={arg.Value.ToString()}&pagina=1");
         var response = await client.SendAsync(request);
         response.EnsureSuccessStatusCode();
         var text = await response.Content.ReadAsStringAsync();
@@ -151,7 +152,6 @@
 
     private async Task OnShowModalClick(Producto producto)
     {
-
         solicitud.Descripcion = producto.descripcion;
         solicitud.NumeroInventario = producto.bienID;
         solicitud.producto = producto;
