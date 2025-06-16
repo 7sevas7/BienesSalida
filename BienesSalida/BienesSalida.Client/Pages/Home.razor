@@ -97,8 +97,6 @@
     private bool showToast = false;
     public List<Usuarios>? listaUsua = new();
     public Producto? producto = new();
-
-
     private TablaSolicitud tablaSolicitud = default!;
 
     private async Task setInventario(ChangeEventArgs arg)
@@ -131,7 +129,6 @@
         editContext = new EditContext(solicitud);
     }
 
-
     private void StartTimer()
     {
         timer = new System.Timers.Timer(1000); // Ejecutar cada 1 segundo
@@ -156,8 +153,6 @@
         solicitud.producto = producto;
         await modal.ShowAsync();
     }
-
-
 
     private async Task ValidateForm()
     {
@@ -194,7 +189,7 @@
     {
         var content = new MultipartFormDataContent();
 
-        content.Add(new StringContent(idUser.ToString()), "idUserEU");
+        //content.Add(new StringContent(idUser.ToString()), "idUserEU");
         content.Add(new StringContent(fyh), "fechaHora");
         content.Add(new StringContent(nombreUsuario), "nombre");
         content.Add(new StringContent(contNo.ToString()), "noSal");
@@ -206,22 +201,22 @@
         content.Add(new StringContent(solicitud.EncargadoArea), "eArea");
         content.Add(new StringContent(status), "estatus");
 
-        var response = await client.PostAsync(navi.Uri + "api/acceso/login", content);
-        //Console.WriteLine(await response.Content.ReadAsStringAsync());
-        var text = await response.Content.ReadAsStringAsync();
-        var sb = JsonConvert.DeserializeObject<SalidasBienes>(text);
-        await localService.InitializeAsync();
-        await localService.SetItemAsync("idUserEU", sb.idUserEU.ToString());
-        await localService.SetItemAsync("fechaHora", sb.fechaHora);
-        await localService.SetItemAsync("nombre", sb.nombre);
-        await localService.SetItemAsync("noSal", sb.noSal.ToString());
-        await localService.SetItemAsync("noInven", sb.noInven.ToString());
-        await localService.SetItemAsync("descrip", sb.descrip);
-        await localService.SetItemAsync("motivo", sb.motivo);
-        await localService.SetItemAsync("observa", sb.observa);
-        await localService.SetItemAsync("area", sb.area);
-        await localService.SetItemAsync("eArea", sb.eArea);
-        await localService.SetItemAsync("estatus", sb.estatus);
+        // var response = await client.PostAsync(navi.Uri + "api/acceso/login", content);
+        // //Console.WriteLine(await response.Content.ReadAsStringAsync());
+        // var text = await response.Content.ReadAsStringAsync();
+        // var sb = JsonConvert.DeserializeObject<SalidasBienes>(text);
+        // await localService.InitializeAsync();
+        // await localService.SetItemAsync("idUserEU", sb.idUserEU.ToString());
+        // await localService.SetItemAsync("fechaHora", sb.fechaHora);
+        // await localService.SetItemAsync("nombre", sb.nombre);
+        // await localService.SetItemAsync("noSal", sb.noSal.ToString());
+        // await localService.SetItemAsync("noInven", sb.noInven.ToString());
+        // await localService.SetItemAsync("descrip", sb.descrip);
+        // await localService.SetItemAsync("motivo", sb.motivo);
+        // await localService.SetItemAsync("observa", sb.observa);
+        // await localService.SetItemAsync("area", sb.area);
+        // await localService.SetItemAsync("eArea", sb.eArea);
+        // await localService.SetItemAsync("estatus", sb.estatus);
 
     }
 }
