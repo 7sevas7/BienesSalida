@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BienesSalida.Share.Models
 {
-    internal class SalidasBienes
+    public class SalidasBienes
     {
         public int? idSal { get; set; }
         public int? idUserEU { get; set; }

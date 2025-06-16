@@ -87,7 +87,7 @@
 
 @code {
 
-    public string nombreUsuario = "";
+    public string nombreUsuario = "", status = "Salida";
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
@@ -171,7 +171,6 @@
         }
         else
         {
-
             tablaSolicitud.AddSolicitud(solicitud);
 
             // ✅ Mantener la lógica original
@@ -191,4 +190,38 @@
         }
     }
 
+    private async Task InsertarBienes()
+    {
+        var content = new MultipartFormDataContent();
+
+        content.Add(new StringContent(idUser.ToString()), "idUserEU");
+        content.Add(new StringContent(fyh), "fechaHora");
+        content.Add(new StringContent(nombreUsuario), "nombre");
+        content.Add(new StringContent(contNo.ToString()), "noSal");
+        content.Add(new StringContent(solicitud.NumeroInventario.ToString()), "noInven");
+        content.Add(new StringContent(solicitud.Descripcion), "descrip");
+        content.Add(new StringContent(solicitud.MotivoSalida), "motivo");
+        content.Add(new StringContent(solicitud.Observaciones), "observa");
+        content.Add(new StringContent(solicitud.Area), "area");
+        content.Add(new StringContent(solicitud.EncargadoArea), "eArea");
+        content.Add(new StringContent(status), "estatus");
+
+        var response = await client.PostAsync(navi.Uri + "api/acceso/login", content);
+        //Console.WriteLine(await response.Content.ReadAsStringAsync());
+        var text = await response.Content.ReadAsStringAsync();
+        var sb = JsonConvert.DeserializeObject<SalidasBienes>(text);
+        await localService.InitializeAsync();
+        await localService.SetItemAsync("idUserEU", sb.idUserEU.ToString());
+        await localService.SetItemAsync("fechaHora", sb.fechaHora);
+        await localService.SetItemAsync("nombre", sb.nombre);
+        await localService.SetItemAsync("noSal", sb.noSal.ToString());
+        await localService.SetItemAsync("noInven", sb.noInven.ToString());
+        await localService.SetItemAsync("descrip", sb.descrip);
+        await localService.SetItemAsync("motivo", sb.motivo);
+        await localService.SetItemAsync("observa", sb.observa);
+        await localService.SetItemAsync("area", sb.area);
+        await localService.SetItemAsync("eArea", sb.eArea);
+        await localService.SetItemAsync("estatus", sb.estatus);
+
+    }
 }
