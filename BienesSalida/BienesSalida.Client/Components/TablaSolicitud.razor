@@ -1,10 +1,10 @@
 ﻿<Grid @ref="grid"
-      TItem="SolicitudBien"
-      Class="table table-hover table-bordered table-striped mt-3"
-      Data="Solicitudes">
+TItem="SolicitudBien"
+Class="table table-hover table-bordered table-striped mt-3"
+Data="solicitudes">
 
     <GridColumns>
-@*         <GridColumn TItem="SolicitudBien" HeaderText="Fecha">
+        @*         <GridColumn TItem="SolicitudBien" HeaderText="Fecha">
             @context.fyh
         </GridColumn> *@
         <GridColumn TItem="SolicitudBien" HeaderText="No.">
@@ -26,11 +26,9 @@
 </Grid>
 
 @code {
-    [Parameter]
-    public List<SolicitudBien> Solicitudes { get; set; } = new();
-
-    Grid<SolicitudBien> grid = default!;
-    private List<SolicitudBien>? solicitudes;
+   
+    public Grid<SolicitudBien> grid = default!;
+    public List<SolicitudBien>? solicitudes;
 
     protected override void OnInitialized()
     {
@@ -39,6 +37,7 @@
 
     public async Task AddSolicitud(SolicitudBien solicitud)
     {
+        Console.WriteLine("Añadiendo ");
         solicitudes!.Add(solicitud);
         await grid.RefreshDataAsync();
     }

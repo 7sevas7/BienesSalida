@@ -3,20 +3,20 @@
 @inject LocalStorageService localService
 <style>
     .valid.modified:not([type=checkbox]) {
-        outline: 1px solid #26b050;
+    outline: 1px solid #26b050;
     }
 
     .invalid {
-        outline: 1px solid red;
+    outline: 1px solid red;
     }
 
     .validation-message {
-        color: red;
+    color: red;
     }
 </style>
 
-<PageTitle>Home</PageTitle>
-<h1 class="text-center m-5 custom-text"> SOLICITUD DE SALIDA DE BIENES </h1>
+<PageTitle >Home</PageTitle>
+<h1 class="text-center m-5 custom-text" id="titulo"> SOLICITUD DE SALIDA DE BIENES </h1>
 <div class="container row w-100">
     <div class="mb-3 custom-text col-3">
         <h5 for="Nombre" class="form-label m-2">Nombre: @nombreUsuario</h5>
@@ -34,9 +34,12 @@
 -->
 <h3 class="m-5 custom-text">Activos solicitados a salir</h3>
 <TablaSolicitud @ref="@tablaSolicitud"/>
+<Button  Color="ButtonColor.Danger" @onclick="@ImprimirActivos">
+    Imprimir
+</Button>
 <Modal @ref="modal" Title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
     <BodyTemplate>
-        
+
         <EditForm EditContext="@editContext" OnValidSubmit="ValidateForm">
             <DataAnnotationsValidator />
 
@@ -46,7 +49,7 @@
                     <TextInput @bind-Value="@solicitud.Area" Style="text-transform: uppercase"/>
                     <ValidationMessage For="@(() => solicitud.Area)" />
 
-                   <label class="form-label">Encargado de Área <span class="text-danger">*</span></label>
+                    <label class="form-label">Encargado de Área <span class="text-danger">*</span></label>
                     <TextInput @bind-Value="@solicitud.EncargadoArea" Style="text-transform: uppercase" />
                     <ValidationMessage For="@(()=>solicitud.EncargadoArea)"/>
 
@@ -69,7 +72,7 @@
                 </div>
             </div>
         </EditForm>
-        
+
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
             <div class="toast show text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style="display:@(showToast ? "block" : "none")">
                 <div class="toast-body">
@@ -77,7 +80,7 @@
                 </div>
             </div>
         </div>
-       
+
 
     </BodyTemplate>
     <FooterTemplate>
@@ -166,7 +169,7 @@
         }
         else
         {
-            tablaSolicitud.AddSolicitud(solicitud);
+            await tablaSolicitud.AddSolicitud(solicitud);
 
             // ✅ Mantener la lógica original
             solicitud = new SolicitudBien();
@@ -184,7 +187,12 @@
             nombreUsuario = await localService.GetItemAsync("userBienes");
         }
     }
+    public async Task ImprimirActivos()
+    {
+        var texto = JsonConvert.SerializeObject(tablaSolicitud.solicitudes);
+        Console.WriteLine(texto);
 
+    }
     private async Task InsertarBienes()
     {
         var content = new MultipartFormDataContent();
