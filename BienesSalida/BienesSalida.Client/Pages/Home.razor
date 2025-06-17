@@ -1,5 +1,6 @@
 ﻿@page "/home"
-
+@inject NavigationManager navi
+@inject HttpClient client
 @inject LocalStorageService localService
 <style>
     .valid.modified:not([type=checkbox]) {
@@ -34,8 +35,8 @@
 -->
 <h3 class="m-5 custom-text">Activos solicitados a salir</h3>
 <TablaSolicitud @ref="@tablaSolicitud"/>
-<Button  Color="ButtonColor.Danger" @onclick="@ImprimirActivos">
-    Imprimir
+<Button  Color="ButtonColor.Success" @onclick="@InsertarBienes">
+    Enviar Solicitud
 </Button>
 <Modal @ref="modal" Title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
     <BodyTemplate>
@@ -195,36 +196,14 @@
     }
     private async Task InsertarBienes()
     {
-        var content = new MultipartFormDataContent();
-
-        //content.Add(new StringContent(idUser.ToString()), "idUserEU");
-        content.Add(new StringContent(fyh), "fechaHora");
-        content.Add(new StringContent(nombreUsuario), "nombre");
-        content.Add(new StringContent(contNo.ToString()), "noSal");
-        content.Add(new StringContent(solicitud.NumeroInventario.ToString()), "noInven");
-        content.Add(new StringContent(solicitud.Descripcion), "descrip");
-        content.Add(new StringContent(solicitud.MotivoSalida), "motivo");
-        content.Add(new StringContent(solicitud.Observaciones), "observa");
-        content.Add(new StringContent(solicitud.Area), "area");
-        content.Add(new StringContent(solicitud.EncargadoArea), "eArea");
-        content.Add(new StringContent(status), "estatus");
-
-        // var response = await client.PostAsync(navi.Uri + "api/acceso/login", content);
-        // //Console.WriteLine(await response.Content.ReadAsStringAsync());
-        // var text = await response.Content.ReadAsStringAsync();
-        // var sb = JsonConvert.DeserializeObject<SalidasBienes>(text);
-        // await localService.InitializeAsync();
-        // await localService.SetItemAsync("idUserEU", sb.idUserEU.ToString());
-        // await localService.SetItemAsync("fechaHora", sb.fechaHora);
-        // await localService.SetItemAsync("nombre", sb.nombre);
-        // await localService.SetItemAsync("noSal", sb.noSal.ToString());
-        // await localService.SetItemAsync("noInven", sb.noInven.ToString());
-        // await localService.SetItemAsync("descrip", sb.descrip);
-        // await localService.SetItemAsync("motivo", sb.motivo);
-        // await localService.SetItemAsync("observa", sb.observa);
-        // await localService.SetItemAsync("area", sb.area);
-        // await localService.SetItemAsync("eArea", sb.eArea);
-        // await localService.SetItemAsync("estatus", sb.estatus);
-
+        var request = new HttpRequestMessage(HttpMethod.Post, navi.Uri+"api/activo");
+        InsertSolicitud solic = new InsertSolicitud();
+        solic.activos = tablaSolicitud.solicitudes;
+        solic.idUser = int.Parse(await localService.GetItemAsync("idUserBienes") ?? "0");
+        var raw = JsonConvert.SerializeObject(solic);
+        var body = new StringContent(raw, System.Text.Encoding.UTF8, "application/json");
+        request.Content = body;
+        var response = client.SendAsync(request).Result;
+        Console.WriteLine(response.StatusCode); 
     }
 }
