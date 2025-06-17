@@ -22,6 +22,9 @@ Data="solicitudes">
         <GridColumn TItem="SolicitudBien" HeaderText="Observaciones">
             @context.Observaciones
         </GridColumn>
+        <GridColumn TItem="SolicitudBien" HeaderText="Estatus">
+            <CheckboxInput Label="Salida" @bind-Value="option2"/>
+        </GridColumn>
     </GridColumns>
 </Grid>
 
@@ -29,6 +32,7 @@ Data="solicitudes">
    
     public Grid<SolicitudBien> grid = default!;
     public List<SolicitudBien>? solicitudes;
+    private bool option2 = true;
 
     protected override void OnInitialized()
     {
