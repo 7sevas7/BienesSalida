@@ -20,7 +20,7 @@
                         <label for="Pass" class="form-label p-2">Contraseña</label>
                         <PasswordInput Value="@Password" ValueExpression="() => Password" ValueChanged="(value) => PasswordChanged(value)" placeholder="Contraseña" class="shadow-lg p-2" />
 
-                        <EditForm Model="@Codigo" class="text-center mx-auto">
+                        @* <EditForm Model="@Codigo" class="text-center mx-auto">
                             <div class="row">
                                 <div class="col-10">
                                     <Captcha CaptchaWord="@capt" OnRefresh="NuevoCaptcha" />
@@ -33,7 +33,7 @@
                                     <Button Color="ButtonColor.Warning" @onclick="ValidacionCapt">Validar</Button>
                                 </div>
                             </div>
-                        </EditForm>
+                        </EditForm> *@
 
                     </div>
                     <div class="mb-3 w-50 text-center p-2 mx-auto">
