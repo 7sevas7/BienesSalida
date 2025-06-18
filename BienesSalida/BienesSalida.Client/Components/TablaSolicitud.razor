@@ -23,7 +23,9 @@ Data="solicitudes">
             @context.Observaciones
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="Estatus">
-            <CheckboxInput Label="Salida" @bind-Value="option2"/>
+            <Button Color="ButtonColor.Danger" Size="ButtonSize.Medium" @onclick="() => CancelarArticulo(context)">
+                <Icon Name="IconName.Trash3Fill"></Icon>
+            </Button>
         </GridColumn>
     </GridColumns>
 </Grid>
@@ -32,11 +34,17 @@ Data="solicitudes">
    
     public Grid<SolicitudBien> grid = default!;
     public List<SolicitudBien>? solicitudes;
-    private bool option2 = true;
+    
+    public async Task CancelarArticulo(SolicitudBien solicitud)
+    {
+        solicitudes = solicitudes?.Where(s => s != solicitud).ToList();
+        await grid.RefreshDataAsync(); // Forzar actualización de la tabla
+    }
 
     protected override void OnInitialized()
     {
         solicitudes = new List<SolicitudBien>();
+        StateHasChanged();
     }
 
     public async Task AddSolicitud(SolicitudBien solicitud)
