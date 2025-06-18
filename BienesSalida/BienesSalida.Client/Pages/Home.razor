@@ -34,7 +34,7 @@
 </div>
 -->
 <h3 class="m-5 custom-text">Activos solicitados a salir</h3>
-<TablaSolicitud @ref="@tablaSolicitud"/>
+<TablaSolicitud @ref="@tablaSolicitud" ContNo="@contNo"/>
 <Button  Color="ButtonColor.Success" @onclick="@InsertarBienes">
     Enviar Solicitud
 </Button>
@@ -96,7 +96,7 @@
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
     private string fechaFormateada = "", horaFormateada = "", fyh;
-    private int contNo = 1;
+    public int contNo = 1;
     private System.Timers.Timer? timer;
     private bool showToast = false;
     public List<Usuarios>? listaUsua = new();

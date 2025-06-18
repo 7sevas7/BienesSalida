@@ -4,11 +4,8 @@ Class="table table-hover table-bordered table-striped mt-3"
 Data="solicitudes">
 
     <GridColumns>
-        @*         <GridColumn TItem="SolicitudBien" HeaderText="Fecha">
-            @context.fyh
-        </GridColumn> *@
         <GridColumn TItem="SolicitudBien" HeaderText="No.">
-            @context.Numero
+            @ContNo.ToString()
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="No. Inventario">
             @context.NumeroInventario
@@ -24,7 +21,7 @@ Data="solicitudes">
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="Estatus">
             <Button Color="ButtonColor.Danger" Size="ButtonSize.Medium" @onclick="() => CancelarArticulo(context)">
-                <Icon Name="IconName.Trash3Fill"></Icon>
+                <Icon Name="IconName.XCircle"></Icon>
             </Button>
         </GridColumn>
     </GridColumns>
@@ -34,7 +31,9 @@ Data="solicitudes">
    
     public Grid<SolicitudBien> grid = default!;
     public List<SolicitudBien>? solicitudes;
-    
+    [Parameter]
+    public int ContNo { get; set; }
+
     public async Task CancelarArticulo(SolicitudBien solicitud)
     {
         solicitudes = solicitudes?.Where(s => s != solicitud).ToList();
