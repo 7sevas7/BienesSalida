@@ -23,7 +23,7 @@
 
 @font-face {
     font-family: 'Montserrat';
-    src: url('/Fonts/Montserrat-Regular.otf') format('opentype');
+    src: url('Fonts/Montserrat-Regular.otf') format('opentype');
 }
 
 .custom-text {
@@ -32,7 +32,7 @@
 
 .blur-background {
     position: relative;
-    background-image: url('/Imagenes/fondo.jpg');
+    background-image: url('Imagenes/fondo.jpg');
     height: 800px;
     background-size: cover;
     background-position: center;
