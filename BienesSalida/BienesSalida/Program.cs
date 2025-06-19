@@ -126,7 +126,8 @@ app.UseAntiforgery();
 
 // ? Aplicar CORS antes de la configuración de rutas
 app.UseCors("AllowAll");
-
+app.UsePathBase("/ControlSalidaBienes");
+//app.UseRouting();
 app.MapControllers();
 
 app.MapRazorComponents<App>()
