@@ -11,13 +11,13 @@ Data="solicitudes">
             @context.NumeroInventario
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="Descripción">
-            @context.Descripcion
+            @(context.Descripcion?.ToUpper())
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="Motivo de salida">
-            @context.MotivoSalida
+            @(context.MotivoSalida?.ToUpper())
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="Observaciones">
-            @context.Observaciones
+            @(context.Observaciones?.ToUpper())
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="Estatus">
             <Button Color="ButtonColor.Danger" Size="ButtonSize.Medium" @onclick="() => CancelarArticulo(context)">

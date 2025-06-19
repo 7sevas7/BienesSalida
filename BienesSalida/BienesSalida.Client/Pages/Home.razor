@@ -212,7 +212,7 @@
         solic.activos = tablaSolicitud.solicitudes;
         solic.idUser = int.Parse(await localService.GetItemAsync("idUserBienes") ?? "0");
         var raw = JsonConvert.SerializeObject(solic);
-        var body = new StringContent(raw, null, "text/plain");
+        var body = new StringContent(raw, Encoding.UTF8, "application/json");
         request.Content = body;
         var response = await client.SendAsync(request);
         Console.WriteLine(response.StatusCode); 

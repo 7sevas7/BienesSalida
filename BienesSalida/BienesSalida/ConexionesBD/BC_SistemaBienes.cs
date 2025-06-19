@@ -10,17 +10,17 @@ namespace BienesSalida.ConexionesBD
         {
             var builder = new SqlConnectionStringBuilder
             {
-                //DataSource = "localhost", //Va la IP del server
-                //UserID = "",
-                //Password = "",
-                //InitialCatalog = "SistemaBien",
-                //TrustServerCertificate = true
-
-                //-------------- CONEXIÓN DE MANERA LOCAL -------------------
-                DataSource = "localhost",
-                InitialCatalog = "SistemaBien",
-                IntegratedSecurity = true, // ✅ Habilita autenticación de Windows
+                DataSource = "172.16.9.10", //Va la IP del server
+                UserID = "usControlSalidaBienes",
+                Password = "brf_Ba902CU-W2SSS#eX",
+                InitialCatalog = "ControlSalidaBienes",
                 TrustServerCertificate = true
+
+                ////-------------- CONEXIÓN DE MANERA LOCAL -------------------
+                //DataSource = "localhost",
+                //InitialCatalog = "SistemaBien",
+                //IntegratedSecurity = true, // ✅ Habilita autenticación de Windows
+                //TrustServerCertificate = true
             };
 
             var connectionString = builder.ConnectionString;
