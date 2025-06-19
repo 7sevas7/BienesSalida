@@ -5,7 +5,7 @@ Data="solicitudes">
 
     <GridColumns>
         <GridColumn TItem="SolicitudBien" HeaderText="No.">
-            @ContNo.ToString()
+            @(solicitudes.IndexOf(context) + 1)
         </GridColumn>
         <GridColumn TItem="SolicitudBien" HeaderText="No. Inventario">
             @context.NumeroInventario
@@ -28,11 +28,9 @@ Data="solicitudes">
 </Grid>
 
 @code {
-   
+
     public Grid<SolicitudBien> grid = default!;
     public List<SolicitudBien>? solicitudes;
-    [Parameter]
-    public int ContNo { get; set; }
 
     public async Task CancelarArticulo(SolicitudBien solicitud)
     {
@@ -52,4 +50,5 @@ Data="solicitudes">
         solicitudes!.Add(solicitud);
         await grid.RefreshDataAsync();
     }
+
 }

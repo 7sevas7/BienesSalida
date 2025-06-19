@@ -34,7 +34,7 @@
 </div>
 -->
 <h3 class="m-5 custom-text">Activos solicitados a salir</h3>
-<TablaSolicitud @ref="@tablaSolicitud" ContNo="@contNo"/>
+<TablaSolicitud @ref="@tablaSolicitud"/>
 <Button  Color="ButtonColor.Success" @onclick="@InsertarBienes">
     Enviar Solicitud
 </Button>
@@ -77,7 +77,7 @@
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
             <div class="toast show text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style="display:@(showToast ? "block" : "none")">
                 <div class="toast-body">
-                    Algunos campos obligatorios están vacíos. Por favor, complétalos.
+                    @mensaje
                 </div>
             </div>
         </div>
@@ -90,7 +90,6 @@
 </Modal>
 
 @code {
-
     public string nombreUsuario = "", status = "Salida";
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
@@ -102,11 +101,12 @@
     public List<Usuarios>? listaUsua = new();
     public Producto? producto = new();
     private TablaSolicitud tablaSolicitud = default!;
+    public string mensaje;
 
     private async Task setInventario(ChangeEventArgs arg)
     {
         var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://172.16.2.28/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={arg.Value.ToString()}&pagina=1");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={arg.Value.ToString()}&pagina=1");
         var response = await client.SendAsync(request);
         response.EnsureSuccessStatusCode();
         var text = await response.Content.ReadAsStringAsync();
@@ -162,23 +162,34 @@
     {
         if (!editContext.Validate())
         {
+            mensaje = "Algunos campos obligatorios están vacíos. Por favor, complétalos.";
             showToast = true;
             StateHasChanged();
             await Task.Delay(3000);
             showToast = false;
             StateHasChanged();
+            return;
         }
-        else
-        {
-            await tablaSolicitud.AddSolicitud(solicitud);
 
-            // ✅ Mantener la lógica original
-            solicitud = new SolicitudBien();
-            editContext = new EditContext(solicitud);
-            contNo++;
-            await modal.HideAsync();
-            StateHasChanged();
+        var existe = tablaSolicitud.solicitudes.Any(s =>
+            s.NumeroInventario == solicitud.NumeroInventario &&
+            s.Fecha == DateTime.Today.ToString("dd/MM/yyyy"));
+
+        if (existe)
+        {
+            mensaje = "Activo ya solicitado para su salida.";
+            showToast = true;
+            Console.WriteLine("Ya se ha registrado este artículo hoy.");
+            return;
         }
+
+        solicitud.Fecha = DateTime.Today.ToString("dd/MM/yyyy");
+        await tablaSolicitud.AddSolicitud(solicitud);
+        solicitud = new SolicitudBien();
+        editContext = new EditContext(solicitud);
+        contNo++;
+        await modal.HideAsync();
+        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

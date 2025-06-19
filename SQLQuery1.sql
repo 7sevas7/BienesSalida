@@ -67,13 +67,15 @@ CREATE PROCEDURE InsercSalida
 	@estatus varchar(255)
 AS
 BEGIN
-    IF NOT EXISTS (SELECT * FROM Salida WHERE noInven = @nInv)
-    BEGIN
-        INSERT INTO Salida (idUserEU,fechaHora,nombre,noSal,noInven,descrip,motivo,observa,area,eArea,estatus)
-        VALUES (@ID_UserEU, @FyH, @Nombre, @nSal, @nInv, @descrip, @moti, @obser, @area, @encArea, @estatus);
-    END; 
+  IF NOT EXISTS (SELECT * FROM Salida WHERE CAST(fechaHora AS DATE) = CAST(@FyH AS DATE) AND noInven = @nInv AND estatus = 'Salida')
+	BEGIN
+		INSERT INTO Salida (idUserEU,fechaHora,nombre,noSal,noInven,descrip,motivo,observa,area,eArea,estatus)
+		VALUES (@ID_UserEU, @FyH, UPPER(@Nombre), @nSal, @nInv, UPPER(@descrip), UPPER(@moti), UPPER(@obser), UPPER(@area), UPPER(@encArea), @estatus);
+	END;
 END;
 GO
+
+--DROP PROCEDURE InsercSalida;
 
 --CONSULTA
 GO
