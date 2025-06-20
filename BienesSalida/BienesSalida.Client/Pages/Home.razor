@@ -94,7 +94,10 @@
 </Modal>
 
 @code {
-    public string nombreUsuario = "", status = "Salida", fechaFormateada = "", horaFormateada = "", fyh, mensaje;
+
+    public string status = "Salida", fechaFormateada = "", horaFormateada = "", mensaje;
+    public string? nombreUsuario { get; set; }
+    public string? FyH { get; set; }
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
@@ -123,16 +126,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //listaUsua = await ConexionBase.ObtenerUsuarios();
-
         UpdateTime();
         StartTimer();
-
-        DateTime fechaActual = DateTime.Now;
-        fechaFormateada = fechaActual.ToString("dd/MM/yyyy");
-        horaFormateada = fechaActual.ToString("HH:mm:ss");
-        fyh = fechaFormateada + " " + horaFormateada;
-
         editContext = new EditContext(solicitud);
     }
 
@@ -149,6 +144,7 @@
         DateTime fechaActual = DateTime.Now;
         fechaFormateada = fechaActual.ToString("dd/MM/yyyy");
         horaFormateada = fechaActual.ToString("HH:mm:ss");
+        FyH = fechaFormateada + " " + horaFormateada;
 
         InvokeAsync(StateHasChanged); // Forzar actualización en la UI
     }
@@ -206,7 +202,6 @@
     {
         var texto = JsonConvert.SerializeObject(tablaSolicitud.solicitudes);
         Console.WriteLine(texto);
-
     }
     private async Task InsertarBienes()
     {
@@ -221,6 +216,5 @@
         Console.WriteLine(response.StatusCode); 
 
         RawJson = raw;
-
     }
 }

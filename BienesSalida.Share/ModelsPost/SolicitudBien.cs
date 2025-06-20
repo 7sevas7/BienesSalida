@@ -16,7 +16,7 @@ namespace BienesSalida.Share.ModelsPost
         public string? Area { get; set; }
         [Required(ErrorMessage = "Encargado de área requerido.")]
         public string? EncargadoArea { get; set; }
-        public int? Numero { get; set; } = 2;
+        public int? Numero { get; set; } = 3;
         public int? NumeroInventario { get; set; }
         public string? Descripcion { get; set; }
         [Required(ErrorMessage = "Motivo de salida requerido.")]
