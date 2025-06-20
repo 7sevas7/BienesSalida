@@ -94,3 +94,15 @@ BEGIN
 		END
 END
 GO
+
+GO
+CREATE PROCEDURE ConsultaSistemaDeBienes
+    @rfc VARCHAR(250),
+    @pass VARCHAR(250)
+AS
+BEGIN
+    SELECT id_empleado, nombre_completo FROM vw_acceso WHERE RFC = @rfc AND pass = @pass;
+END;
+GO
+
+--UPDATE Usuarios SET Roll = 'Administrador'WHERE Nombre = 'ANA TERESA VARGAS BARONA';

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Include="..\BienesSalida.Client\Components\Checkbox.razor" Link="Checkbox.razor" />
+    <None Include="..\BienesSalida.Client\Pages\Component.razor" Link="Component.razor" />
   </ItemGroup>
 
   <ItemGroup>

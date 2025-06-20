@@ -26,16 +26,16 @@ namespace BienesSalida.Controllers
                     var activo = body.activos[i];
                     await BC_SistemaBienes.salidasInserAsync(
                        body.idUser,
-                       "fechaHoy",
-                       "sebastian",
-                       1233123,
+                       activo.Fecha,
+                       activo.Nombre,
+                       activo.Numero,
                        activo.NumeroInventario,
                        activo.Descripcion,
                        activo.MotivoSalida,
                        activo.Observaciones,
                        activo.Area,
                        activo.EncargadoArea,
-                       "Aceptado"
+                       activo.estatus
                     );
                 }
                 return Ok(body);

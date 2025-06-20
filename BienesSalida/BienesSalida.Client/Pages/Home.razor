@@ -38,6 +38,12 @@
 <Button  Color="ButtonColor.Success" @onclick="@InsertarBienes">
     Enviar Solicitud
 </Button>
+
+@if (!string.IsNullOrEmpty(RawJson))
+{
+    <h4>@RawJson</h4>
+}
+
 <Modal @ref="modal" Title="Registrar bien a salir" UseStaticBackdrop="true" BodyCssClass="p-0" CloseOnEscape="false">
     <BodyTemplate>
 
@@ -81,8 +87,6 @@
                 </div>
             </div>
         </div>
-
-
     </BodyTemplate>
     <FooterTemplate>
         <Button Type="ButtonType.Submit" Color="ButtonColor.Success" @onclick="ValidateForm">Enviar</Button>
@@ -90,18 +94,17 @@
 </Modal>
 
 @code {
-    public string nombreUsuario = "", status = "Salida";
+    public string nombreUsuario = "", status = "Salida", fechaFormateada = "", horaFormateada = "", fyh, mensaje;
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
-    private string fechaFormateada = "", horaFormateada = "", fyh;
     public int contNo = 1;
     private System.Timers.Timer? timer;
     private bool showToast = false;
     public List<Usuarios>? listaUsua = new();
     public Producto? producto = new();
     private TablaSolicitud tablaSolicitud = default!;
-    public string mensaje;
+    public string? RawJson { get; set; }
 
     private async Task setInventario(ChangeEventArgs arg)
     {
@@ -216,5 +219,8 @@
         request.Content = body;
         var response = await client.SendAsync(request);
         Console.WriteLine(response.StatusCode); 
+
+        RawJson = raw;
+
     }
 }
