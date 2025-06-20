@@ -50,7 +50,6 @@ namespace BienesSalida.Controllers
                     new Claim[] {
                         new Claim(ClaimTypes.NameIdentifier, nameCurp),
                         new Claim(ClaimTypes.PrimarySid, idUser)
-
                     }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
