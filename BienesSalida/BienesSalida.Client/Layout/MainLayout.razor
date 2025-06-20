@@ -48,15 +48,7 @@
 
     private void cerrarSesion()
     {
-        /*
-        BC_Usuarios.nameEmp = null;  // Resetear variables
-        BC_Usuarios.idEmp = 0;
-
-        StateHasChanged(); // Actualizar la UI
-        Console.WriteLine(BC_Usuarios.nameEmp);
-        Console.WriteLine(BC_Usuarios.idEmp);
-        */
-        navi.NavigateTo("/"); // Redirigir al usuario al inicio
+        navi.NavigateTo("/ControlSalidaBienes"); // Redirigir al usuario al inicio
     }
 
     private void ToggleSidebar() => sidebar.ToggleSidebar();
