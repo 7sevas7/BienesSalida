@@ -86,7 +86,7 @@
 
         content.Add(new StringContent(usuario), "nombre");
         content.Add(new StringContent(Password), "password");
-        var response = await client.PostAsync(navi.Uri + "api/acceso/login", content);
+        var response = await client.PostAsync(navi.Uri + "/api/acceso/login", content);
         // response.EnsureSuccessStatusCode();
         Console.WriteLine(await response.Content.ReadAsStringAsync());
         var text = await response.Content.ReadAsStringAsync();
@@ -106,7 +106,7 @@
         }
         else
         {
-            navi.NavigateTo("/home#titulo");
+            navi.NavigateTo("home");
         }
 
         /*
