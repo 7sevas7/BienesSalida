@@ -19,7 +19,7 @@ Data="solicitudes">
         <GridColumn TItem="SolicitudBien" HeaderText="Observaciones">
             @(context.Observaciones?.ToUpper())
         </GridColumn>
-        <GridColumn TItem="SolicitudBien" HeaderText="Estatus">
+        <GridColumn TItem="SolicitudBien" HeaderText="Descartar">
             <Button Color="ButtonColor.Danger" Size="ButtonSize.Medium" @onclick="() => CancelarArticulo(context)">
                 <Icon Name="IconName.XCircle"></Icon>
             </Button>
