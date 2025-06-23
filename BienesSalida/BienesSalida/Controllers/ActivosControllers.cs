@@ -1,4 +1,5 @@
 ﻿using BienesSalida.ConexionesBD;
+using BienesSalida.Share;
 using BienesSalida.Share.ModelsPost;
 
 using Microsoft.AspNetCore.Mvc;
@@ -38,11 +39,16 @@ namespace BienesSalida.Controllers
                        activo.estatus
                     );
                 }
-                return Ok(body);
+                return Ok();
             }
             catch (Exception ex) {
-                return Ok(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseApi { tipe = TipoRes.Existe,response= ex.Message });
+                //return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
+        }
+        [HttpGet]
+        public IActionResult GetActivs() {
+            return Ok("Mensajes de prueba ");
         }
 
     }

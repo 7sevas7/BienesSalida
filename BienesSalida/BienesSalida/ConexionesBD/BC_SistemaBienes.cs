@@ -79,15 +79,23 @@ namespace BienesSalida.ConexionesBD
                 command.Parameters.AddWithValue("@estatus", estatus);
 
                 await using var reader = await command.ExecuteReaderAsync();
-                await reader.ReadAsync();
+
+                while (reader.Read())
+                {
+                    if(reader["Resultado"].ToString() == "0"){
+                        throw new Exception("Articulo no disponible");
+                    }
+                }
             }
             catch (SqlException sqlEx)
             {
                 Console.WriteLine("Error en SQL Server3: " + sqlEx.Message);
+                throw new Exception(sqlEx.Message);
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error general3: " + e.Message);
+                throw new Exception(e.Message);
             }
         }
 

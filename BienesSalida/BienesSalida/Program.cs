@@ -68,6 +68,7 @@ using BienesSalida.Client.Pages;
 using BienesSalida.Components;
 using BienesSalida.ConexionesBD;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,14 +82,18 @@ builder.Services.AddCors(options =>
 
 // ? Servicios necesarios para la API
 builder.Services.AddControllers();
-builder.Services.AddHttpClient();
+
 
 // ? Configuración de Blazor
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddBlazorBootstrap();
-
+builder.Services.AddScoped(sp =>
+{
+    var nav = sp.GetRequiredService<NavigationManager>();
+    return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
+});
 // ? Configuración de autenticación con JWT
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
 {

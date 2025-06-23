@@ -45,8 +45,7 @@ Data="solicitudes">
     }
 
     public async Task AddSolicitud(SolicitudBien solicitud)
-    {
-        Console.WriteLine("Añadiendo ");
+    {        
         solicitudes!.Add(solicitud);
         await grid.RefreshDataAsync();
     }
