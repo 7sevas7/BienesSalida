@@ -2,6 +2,7 @@
 @inject NavigationManager navi
 @inject HttpClient client
 @inject LocalStorageService localService
+
 <style>
     .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
@@ -95,10 +96,13 @@
 
 <Modal @ref="serviceModal">
     <BodyTemplate>
-        @mensaje eRRORESERSI
+        @mensaje
     </BodyTemplate>   
 </Modal>
+
+
 @code {
+
 
 
     private Modal serviceModal { set; get; } = default!;
@@ -221,22 +225,23 @@
     {
         //await ModalShow(ModalType.Danger,"Error","ErroR al insertar un articulo");
         Console.WriteLine("Insetento de envio ");
-        try{
+        try
+        {
             PreloadService.Show(SpinnerColor.Danger);
             //Modelo que se enviara al server para que haga el registro de los articulos
             InsertSolicitud solic = new InsertSolicitud();
-            //Creamos una nueva lista, recordemos que le haen falta algunos datos 
+            //Creamos una nueva lista, recordemos que le haen falta algunos datos
             List<SolicitudBien> insertDatos = new();
-            //Iteramos los articulos para añadir los datos por llenar 
+            //Iteramos los articulos para añadir los datos por llenar
             foreach (var item in tablaSolicitud.solicitudes)
             {
                 item.Nombre = nombreUsuario;
                 item.Fecha = FyH;
-                item.Numero = 100;//Aqui añadiremos el contadoe cada que se alada 
-                //Añadimos los elementos con los nuevos datos 
+                item.Numero = 100;//Aqui añadiremos el contadoe cada que se alada
+                //Añadimos los elementos con los nuevos datos
                 insertDatos.Add(item);
             }
-            //Le asignamos el valor de la nueva lista al modelo que enviaremos 
+            //Le asignamos el valor de la nueva lista al modelo que enviaremos
             solic.activos = insertDatos;
             //Obtenemos el id del usuario que recordemos lo guardamos en el local Storage del navegador y le asignamos el nuevo valor al modelos que le enviaremos al server
             var userId = int.Parse(await localService.GetItemAsync("idUserBienes") ?? "0");
@@ -245,30 +250,31 @@
             //Recordemos que el servidor no reconoce objetos en automatico
             //Lo hace a travez de texto en formato de JSON
 
-
+            var clientt = new HttpClient();
             //Creamos la peticion, que es una peticion ???
-            var request = new HttpRequestMessage(HttpMethod.Post,"/api/activo");//Recordemos que el metodo para enviar datos es con POST
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://172.16.9.10/ControlSalidaBienes/api/activo");//Recordemos que el metodo para enviar datos es con POST
             //Convertiremos nuestro modelo a enviar en un json , con este comando crearemos un json, desde el modelo
             var rawJson = JsonConvert.SerializeObject(solic);
             var content = new StringContent(rawJson, null, "application/json");//Es lo que le enviaremos al server
-            //Le asigamos los valores a enviar en la peticion 
+            //Le asigamos los valores a enviar en la peticion
             request.Content = content;
-            //Le aremos el envio de los datos al server 
-            var response = await client.SendAsync(request);
+            //Le aremos el envio de los datos al server
+            var response = await clientt.SendAsync(request);
             //Esta fucion lanza un error en caso de que la respuesta sea diferente a 200
             Console.WriteLine(await response.Content.ReadAsStringAsync());
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 //Aqui obtenemos la respuesta del servidor en textto que en realidad es texto plano en formato JSON
                 var mensaje = await response.Content.ReadAsStringAsync();
-                //ya que que no hay una estrucutura definida para recibir errores yo cree una que podra servir para otras cosas 
+                //ya que que no hay una estrucutura definida para recibir errores yo cree una que podra servir para otras cosas
 
                 //Aqui entra lo que te comentaba, ahora necesitamos recibir la reouesta de un servidor,
                 //recuerda cielo que es un json, que tenemos que convertir en un objeto(modelo)
                 var respuesta = JsonConvert.DeserializeObject<ResponseApi>(mensaje);
                 mensaje = respuesta.response.ToString();
                 //await ModalShow(ModalType.Danger, "Algo salio mal!", respuesta.response.ToString());
-                serviceModal.Title = "Algo salio mal!";
+                serviceModal.Title = "Solicitud rechazada:";
+                mensaje = "El artículo ya fue solicitado previamente.";
                 serviceModal.HeaderCssClass = "bg-danger text-light";
 
                 PreloadService.Hide();
@@ -276,22 +282,18 @@
                 await serviceModal.ShowAsync();
                 return;
             }
-            serviceModal.Title = "Solicitud correctactamente";
+            serviceModal.Title = "Solicitud correcta:";
+            mensaje = "La solicitud ha sido registrada exitosamente.";
             serviceModal.HeaderCssClass = "bg-succes";
             PreloadService.Hide();
-            await serviceModal.ShowAsync();            
+            await serviceModal.ShowAsync();
             await Task.Delay(5000);
             await serviceModal.HideAsync();
-
-        }catch(Exception ex ){
-            PreloadService.Hide();            
-            /*mensaje = $"Error inesperado: {ex.Message}";
-            showToast = true;
-            StateHasChanged();
-            await Task.Delay(3000);
-            showToast = false;
-            StateHasChanged();
-            */
+            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            PreloadService.Hide();
         }
     }
    

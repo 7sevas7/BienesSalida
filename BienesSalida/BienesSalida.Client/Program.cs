@@ -10,6 +10,7 @@ builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped(sp =>
 {
     var nav = sp.GetRequiredService<NavigationManager>();
-    return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
+    return new HttpClient { BaseAddress = new Uri("https://172.16.9.10/ControlSalidaBienes") };
+    //return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
 });
 await builder.Build().RunAsync();

@@ -92,7 +92,8 @@ builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped(sp =>
 {
     var nav = sp.GetRequiredService<NavigationManager>();
-    return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
+    return new HttpClient { BaseAddress = new Uri("https://172.16.9.10/ControlSalidaBienes") };
+    //return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
 });
 // ? Configuración de autenticación con JWT
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
