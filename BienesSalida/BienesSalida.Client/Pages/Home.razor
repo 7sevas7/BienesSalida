@@ -289,7 +289,7 @@
             await serviceModal.ShowAsync();
             await Task.Delay(5000);
             await serviceModal.HideAsync();
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+            navi.NavigateTo(navi.Uri, forceLoad: true);
         }
         catch (Exception ex)
         {

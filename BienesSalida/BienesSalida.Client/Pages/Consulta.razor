@@ -19,21 +19,9 @@
     </Button>
 </div>
 
-<table class="table m-2">
-   <thead>
-      <tr>
-         <th>Fecha y hora</th>
-         <th>Nombre</th>
-         <th>No.</th>
-         <th>No. Inventario</th>
-         <th>Descripción</th>
-         <th>Motivo de salida</th>
-         <th>Observaciones</th>
-         <th>Estatus</th>
-      </tr>
-   </thead>
-</table>
+@* <TablaConsulta @ref="@tablaConsulta" /> *@
 
 @code {
     private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now.AddDays(1));
+    private TablaConsulta tablaConsulta = default!;
 }
