@@ -55,7 +55,7 @@ namespace BienesSalida.ConexionesBD
         }
 
         //--------------------------- SALIDAS ---------------------------
-        public async Task salidasInserAsync(int idUserEU, string FyH, string Nombre, int? nSal, int? nInv, string? descrip, string? moti, string? obser, 
+        public async Task salidasInserAsync(int idUserEU, string FyH, string Nombre, int? nSal, long? nInv, string? descrip, string? moti, string? obser, 
                                        string? area, string? encArea, string? estatus)
         {
             try

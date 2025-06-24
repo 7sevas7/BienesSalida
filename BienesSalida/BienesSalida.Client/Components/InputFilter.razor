@@ -44,7 +44,7 @@
 
 
     [Parameter]
-    public Func<int?,Task> BuscarActivo { set; get; }
+    public Func<long?,Task> BuscarActivo { set; get; }
 
     protected override void OnInitialized()
     {
@@ -74,8 +74,8 @@
     public class ActivoFijo
     {
         [Required(ErrorMessage = "Número de inventario requerido")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debe ser un número entero positivo")]
-        public int? noInventario { get; set; }
+        [Range(1, long.MaxValue, ErrorMessage = "Debe ser un número entero positivo")]
+        public long? noInventario { get; set; }
 
     }
 }

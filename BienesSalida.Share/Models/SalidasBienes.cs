@@ -13,7 +13,7 @@ namespace BienesSalida.Share.Models
         public string? fechaHora { get; set; }
         public string? nombre { get; set; }
         public int? noSal { get; set; }
-        public int? noInven { get; set; }
+        public long? noInven { get; set; }
         public string? descrip { get; set; }
         public string? motivo { get; set; }
         public string? observa { get; set; }

@@ -8,8 +8,8 @@ namespace BienesSalida.Share.Models
 {
     public class Producto
     {
-        public int? bienID { get; set; }
-        public int? numeroInventario_SAI { get; set; }
+        public long? bienID { get; set; }
+        public long? numeroInventario_SAI { get; set; }
         public string? tipoBien { get; set; }
         public string? descripcion { get; set; }
         public string? marca { get; set; }
