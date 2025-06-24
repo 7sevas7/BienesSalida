@@ -263,13 +263,13 @@
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 //Aqui obtenemos la respuesta del servidor en textto que en realidad es texto plano en formato JSON
-                var mensaje = await response.Content.ReadAsStringAsync();
+                var mensaje2 = await response.Content.ReadAsStringAsync();
                 //ya que que no hay una estrucutura definida para recibir errores yo cree una que podra servir para otras cosas
 
                 //Aqui entra lo que te comentaba, ahora necesitamos recibir la reouesta de un servidor,
                 //recuerda cielo que es un json, que tenemos que convertir en un objeto(modelo)
-                var respuesta = JsonConvert.DeserializeObject<ResponseApi>(mensaje);
-                mensaje = respuesta.response.ToString();
+                var respuesta = JsonConvert.DeserializeObject<ResponseApi>(mensaje2);   
+                mensaje2 = respuesta.response.ToString();
                 //await ModalShow(ModalType.Danger, "Algo salio mal!", respuesta.response.ToString());
                 serviceModal.Title = "Solicitud rechazada:";
                 mensaje = "El artículo ya fue solicitado previamente.";

@@ -6,19 +6,20 @@
 @inject LocalStorageService localService
 
 <div class="blur-background">
-    <div class="card shadow-lg w-50 m-3" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color:white;">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card-header d-flex justify-content-around align-items-center" style="background-color:#e3e3e3;">
-                    <h2 class="text-center m-1 ">SISTEMA DE SOLICITUD DE SALIDA DE BIENES</h2>
-                    <img class="rounded-top" width="200" height="80" src="Imagenes/DIF_LOGO-02.png" alt="placeholder" />
-                </div>
-                <div class="card-body custom-text " style="color:black">
-                    <div class="mb-3 text-center w-50 mx-auto">
-                        <label for="User" class="form-label p-2">Usuario</label>
-                        <input @bind-value="usuario" type="text" class="form-control shadow-lg p-2" id="User" aria-describedby="UserHelp" placeholder="Usuario" style="text-transform: uppercase;">
-                        <label for="Pass" class="form-label p-2">Contraseña</label>
-                        <PasswordInput Value="@Password" ValueExpression="() => Password" ValueChanged="(value) => PasswordChanged(value)" placeholder="Contraseña" class="shadow-lg p-2" />
+    <div class="contenido">
+        <div class="card shadow-lg w-50 m-3" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color:white;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-header d-flex justify-content-around align-items-center" style="background-color:#e3e3e3;">
+                        <h2 class="text-center m-1 ">SISTEMA DE SOLICITUD DE SALIDA DE BIENES</h2>
+                        <img class="rounded-top" width="200" height="80" src="Imagenes/DIF_LOGO-02.png" alt="placeholder" />
+                    </div>
+                    <div class="card-body custom-text " style="color:black">
+                        <div class="mb-3 text-center w-50 mx-auto">
+                            <label for="User" class="form-label p-2">Usuario</label>
+                            <input @bind-value="usuario" type="text" class="form-control shadow-lg p-2" id="User" aria-describedby="UserHelp" placeholder="Usuario" style="text-transform: uppercase;">
+                            <label for="Pass" class="form-label p-2">Contraseña</label>
+                            <PasswordInput Value="@Password" ValueExpression="() => Password" ValueChanged="(value) => PasswordChanged(value)" placeholder="Contraseña" class="shadow-lg p-2" />
 
                         @* <EditForm Model="@Codigo" class="text-center mx-auto">
                             <div class="row">
@@ -35,15 +36,16 @@
                             </div>
                         </EditForm> *@
 
-                    </div>
-                    <div class="mb-3 w-50 text-center p-2 mx-auto">
-                        <Button Color="ButtonColor.Success" @onclick="Verificar" Disabled="@activateLogin">Enviar</Button>
+                        </div>
+                        <div class="mb-3 w-50 text-center p-2 mx-auto">
+                            <Button Color="ButtonColor.Success" @onclick="Verificar" Disabled="@activateLogin">Enviar</Button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
     </div>
-    <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 </div>
 
 @code {
