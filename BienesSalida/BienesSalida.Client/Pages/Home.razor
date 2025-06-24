@@ -21,6 +21,7 @@
 <h1 class="text-center m-5 custom-text" id="titulo"> SOLICITUD DE SALIDA DE BIENES </h1>
 <div class="container row w-100">
     <div class="mb-3 custom-text col-3">
+        <h5 for="Nombre" class="form-label m-2">No. Empleado: @noEmple</h5>
         <h5 for="Nombre" class="form-label m-2">Nombre: @nombreUsuario</h5>
         <h5 class="label label-default m-2">Fecha actual: @fechaFormateada</h5>
         <h5 class="label label-default m-2">Hora actual: @horaFormateada</h5>
@@ -103,16 +104,16 @@
 
 @code {
 
+
+
     private Modal serviceModal { set; get; } = default!;
     //Este es para una carga     
     //Carag para evitar que el usuario haga alguna accion de mas
     [Inject] protected PreloadService PreloadService { get; set; } = default!;
-
-
-
     public string status = "Salida", fechaFormateada = "", horaFormateada = "", mensaje;
     public string? nombreUsuario { get; set; }
     public string? FyH { get; set; }
+    public string? noEmple { get; set; }
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
@@ -212,6 +213,7 @@
         if (firstRender) {
             await localService.InitializeAsync();
             nombreUsuario = await localService.GetItemAsync("userBienes");
+            noEmple = await localService.GetItemAsync("idUserBienes");
         }
     }
     public async Task ImprimirActivos()
