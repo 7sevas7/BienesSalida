@@ -1,9 +1,9 @@
-﻿@* <Grid @ref="grid"
-TItem="ConsultaSalida"
+﻿<Grid TItem="ConsultaSalida"
 Class="table table-hover table-bordered table-striped"
 AllowPaging="true"
 PageSize="100"
 Responsive="true">
+
     <GridColumns>
         <GridColumn TItem="ConsultaSalida" HeaderText="Fecha y hora"> </GridColumn>
         <GridColumn TItem="ConsultaSalida" HeaderText="Nombre"> </GridColumn>
@@ -14,12 +14,11 @@ Responsive="true">
         <GridColumn TItem="ConsultaSalida" HeaderText="Observaciones"> </GridColumn>
         <GridColumn TItem="ConsultaSalida" HeaderText="Estatus"> </GridColumn>
     </GridColumns>
+
 </Grid>
 
 @code {
-    public Grid<SolicitudBien> grid = default!;
-    public List<SolicitudBien>? solicitudes;
-
+    private IEnumerable<SalidasBienes> ConsultaSalida = default!;
 
     
-} *@
+}
