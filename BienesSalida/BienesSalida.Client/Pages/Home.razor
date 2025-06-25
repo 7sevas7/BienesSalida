@@ -221,79 +221,87 @@
         var texto = JsonConvert.SerializeObject(tablaSolicitud.solicitudes);
         Console.WriteLine(texto);
     }
+ 
     private async Task InsertarBienes()
     {
-        //await ModalShow(ModalType.Danger,"Error","ErroR al insertar un articulo");
-        Console.WriteLine("Insetento de envio ");
+        Console.WriteLine("Intento de envío individual de artículos");
         try
         {
             PreloadService.Show(SpinnerColor.Danger);
-            //Modelo que se enviara al server para que haga el registro de los articulos
-            InsertSolicitud solic = new InsertSolicitud();
-            //Creamos una nueva lista, recordemos que le haen falta algunos datos
+
+            var userId = int.Parse(await localService.GetItemAsync("idUserBienes") ?? "0");
+
+            // Creamos nueva lista con los datos actualizados
             List<SolicitudBien> insertDatos = new();
-            //Iteramos los articulos para añadir los datos por llenar
             foreach (var item in tablaSolicitud.solicitudes)
             {
                 item.Nombre = nombreUsuario;
                 item.Fecha = FyH;
-                item.Numero = contNo;//Aqui añadiremos el contadoe cada que se alada
-                //Añadimos los elementos con los nuevos datos
+                item.Numero = contNo; // Contador
                 insertDatos.Add(item);
             }
-            //Le asignamos el valor de la nueva lista al modelo que enviaremos
-            solic.activos = insertDatos;
-            //Obtenemos el id del usuario que recordemos lo guardamos en el local Storage del navegador y le asignamos el nuevo valor al modelos que le enviaremos al server
-            var userId = int.Parse(await localService.GetItemAsync("idUserBienes") ?? "0");
-            solic.idUser = userId;
 
-            //Recordemos que el servidor no reconoce objetos en automatico
-            //Lo hace a travez de texto en formato de JSON
+            int enviadosCorrectamente = 0;
+            List<string> errores = new();
 
-            var clientt = new HttpClient();
-            //Creamos la peticion, que es una peticion ???
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://172.16.9.10/ControlSalidaBienes/api/activo");//Recordemos que el metodo para enviar datos es con POST
-            //Convertiremos nuestro modelo a enviar en un json , con este comando crearemos un json, desde el modelo
-            var rawJson = JsonConvert.SerializeObject(solic);
-            var content = new StringContent(rawJson, null, "application/json");//Es lo que le enviaremos al server
-            //Le asigamos los valores a enviar en la peticion
-            request.Content = content;
-            //Le aremos el envio de los datos al server
-            var response = await clientt.SendAsync(request);
-            //Esta fucion lanza un error en caso de que la respuesta sea diferente a 200
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            foreach (var item in insertDatos)
             {
-                //Aqui obtenemos la respuesta del servidor en textto que en realidad es texto plano en formato JSON
-                var mensaje2 = await response.Content.ReadAsStringAsync();
-                //ya que que no hay una estrucutura definida para recibir errores yo cree una que podra servir para otras cosas
+                InsertSolicitud solicitudIndividual = new InsertSolicitud
+                {
+                    idUser = userId,
+                    activos = new List<SolicitudBien> { item }
+                };
 
-                //Aqui entra lo que te comentaba, ahora necesitamos recibir la reouesta de un servidor,
-                //recuerda cielo que es un json, que tenemos que convertir en un objeto(modelo)
-                var respuesta = JsonConvert.DeserializeObject<ResponseApi>(mensaje2);   
-                mensaje2 = respuesta.response.ToString();
-                //await ModalShow(ModalType.Danger, "Algo salio mal!", respuesta.response.ToString());
-                serviceModal.Title = "Solicitud rechazada:";
-                mensaje = "El artículo ya fue solicitado previamente.";
-                serviceModal.HeaderCssClass = "bg-danger text-light";
+                var rawJson = JsonConvert.SerializeObject(solicitudIndividual);
+                var content = new StringContent(rawJson, null, "application/json");
 
-                PreloadService.Hide();
-                StateHasChanged();
-                await serviceModal.ShowAsync();
-                return;
+                var clientt = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Post, "http://172.16.9.10/ControlSalidaBienes/api/activo");
+                request.Content = content;
+
+                var response = await clientt.SendAsync(request);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"Artículo {item.Numero}: {response.StatusCode} → {responseBody}");
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    var respuesta = JsonConvert.DeserializeObject<ResponseApi>(responseBody);
+                    errores.Add($"Artículo {item.Numero}: {respuesta?.response ?? " ya fue solicitado previamente"}");
+                }
+                else
+                {
+                    enviadosCorrectamente++;
+                }
             }
-            serviceModal.Title = "Solicitud correcta:";
-            mensaje = "La solicitud ha sido registrada exitosamente.";
-            serviceModal.HeaderCssClass = "bg-succes";
+
             PreloadService.Hide();
+
+            if (errores.Any())
+            {
+                serviceModal.Title = "Solicitud con errores:";
+                mensaje = $"Se enviaron {enviadosCorrectamente} artículos correctamente. Resto de los activos ya fueron solicitados previamente";
+                serviceModal.HeaderCssClass = "bg-warning text-dark";
+            }
+            else
+            {
+                serviceModal.Title = "Solicitud correcta:";
+                mensaje = "Todos los artículos fueron registrados exitosamente.";
+                serviceModal.HeaderCssClass = "bg-success text-light";
+            }
+
             await serviceModal.ShowAsync();
-            await Task.Delay(2000);
+            await Task.Delay(4000);
             await serviceModal.HideAsync();
             navi.NavigateTo(navi.Uri, forceLoad: true);
         }
         catch (Exception ex)
         {
             PreloadService.Hide();
+            serviceModal.Title = "Error inesperado:";
+            mensaje = $"Algo salió mal: {ex.Message}";
+            serviceModal.HeaderCssClass = "bg-danger text-light";
+            await serviceModal.ShowAsync();
         }
     }
    
