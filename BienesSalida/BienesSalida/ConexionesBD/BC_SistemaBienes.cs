@@ -117,7 +117,6 @@ namespace BienesSalida.ConexionesBD
                 {
                     var salida = new SalidasBienes
                     {
-                        idSal = reader.GetInt32(0),
                         idUserEU = reader.GetInt32(1),
                         fechaHora = reader.GetString(2),
                         nombre = reader.GetString(3),
