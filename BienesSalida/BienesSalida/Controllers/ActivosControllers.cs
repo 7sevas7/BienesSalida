@@ -29,7 +29,6 @@ namespace BienesSalida.Controllers
                        body.idUser,
                        activo.Fecha,
                        activo.Nombre,
-                       activo.Numero,
                        activo.NumeroInventario,
                        activo.Descripcion,
                        activo.MotivoSalida,

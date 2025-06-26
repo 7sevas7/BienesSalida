@@ -22,7 +22,7 @@
 <div class="container row w-100">
     <div class="mb-3 custom-text col-3">
         <h5 for="Nombre" class="form-label m-2">No. Empleado: @noEmple</h5>
-        <h5 for="Nombre" class="form-label m-2">Nombre: @nombreUsuario</h5>
+        <h5 class="form-label m-2">Nombre: @(nombreUsuario?.ToUpper())</h5>
         <h5 class="label label-default m-2">Fecha actual: @fechaFormateada</h5>
         <h5 class="label label-default m-2">Hora actual: @horaFormateada</h5>
     </div>
@@ -61,9 +61,6 @@
                     <label class="form-label">Encargado de Área <span class="text-danger">*</span></label>
                     <TextInput @bind-Value="@solicitud.EncargadoArea" Style="text-transform: uppercase" />
                     <ValidationMessage For="@(()=>solicitud.EncargadoArea)"/>
-
-                    <label class="form-label">No.</label>
-                    <NumberInput @bind-Value="@contNo" Disabled="true"/>
 
                     <label class="form-label">No. de Inventario</label>
                     <NumberInput @bind-Value="@solicitud.NumeroInventario" Disabled="true"/>
@@ -117,7 +114,6 @@
     private Modal modal = default!;
     private SolicitudBien solicitud = new();
     private EditContext? editContext;
-    public int contNo = 1;
     private System.Timers.Timer? timer;
     private bool showToast = false;
     public List<Usuarios>? listaUsua = new();
@@ -203,7 +199,6 @@
         await tablaSolicitud.AddSolicitud(solicitud);
         solicitud = new SolicitudBien();
         editContext = new EditContext(solicitud);
-        contNo++;
         await modal.HideAsync();
         StateHasChanged();
     }
@@ -237,7 +232,6 @@
             {
                 item.Nombre = nombreUsuario;
                 item.Fecha = FyH;
-                item.Numero = contNo; // Contador
                 insertDatos.Add(item);
             }
 

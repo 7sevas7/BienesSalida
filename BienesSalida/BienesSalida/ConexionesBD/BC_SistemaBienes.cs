@@ -55,7 +55,7 @@ namespace BienesSalida.ConexionesBD
         }
 
         //--------------------------- SALIDAS ---------------------------
-        public async Task salidasInserAsync(int idUserEU, string FyH, string Nombre, int? nSal, long? nInv, string? descrip, string? moti, string? obser, 
+        public async Task salidasInserAsync(int idUserEU, string FyH, string Nombre, long? nInv, string? descrip, string? moti, string? obser, 
                                        string? area, string? encArea, string? estatus)
         {
             try
@@ -64,12 +64,11 @@ namespace BienesSalida.ConexionesBD
                 Console.WriteLine("Conexión establecida correctamente.");
 
                 //USUARIOS
-                var sql = "EXEC InsercSalida @ID_UserEU, @FyH, @Nombre, @nSal, @nInv, @descrip, @moti, @obser, @area, @encArea, @estatus";
+                var sql = "EXEC InsercSalida @ID_UserEU, @FyH, @Nombre, @nInv, @descrip, @moti, @obser, @area, @encArea, @estatus";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@ID_UserEU", idUserEU);
                 command.Parameters.AddWithValue("@FyH", FyH);
                 command.Parameters.AddWithValue("@Nombre", Nombre);
-                command.Parameters.AddWithValue("@nSal", nSal);
                 command.Parameters.AddWithValue("@nInv", nInv);
                 command.Parameters.AddWithValue("@descrip", descrip);
                 command.Parameters.AddWithValue("@moti", moti);
@@ -99,16 +98,15 @@ namespace BienesSalida.ConexionesBD
             }
         }
 
-        public async Task salidasConsGAsync(string roll, int idUserEU, string Nombre)
+        public async Task salidasConsGAsync(int idUserEU, string Nombre)
         {
             try
             {
                 await connection.OpenAsync();
                 Console.WriteLine("Conexión establecida correctamente.");
                 string sql;
-                sql = "EXECT ObtenerSalida @Roll, @idUserEU, @Nombre";
+                sql = "EXECT ObtenerSalida @idUserEU, @Nombre";
                 await using var command = new SqlCommand(sql, connection);
-                command.Parameters.AddWithValue("@Roll", roll);
                 command.Parameters.AddWithValue("@idUserEU", idUserEU);
                 command.Parameters.AddWithValue("@Nombre", Nombre);
 
