@@ -1,6 +1,6 @@
 ﻿<Grid TItem="SalidasBienes"
       Class="table table-hover table-bordered"
-      @* DataProvider="CustomersDataProvider" *@
+      DataProvider="CargarSalidasAsync"
       AllowFiltering="true"
       AllowPaging="true"
       AllowSorting="true"
@@ -8,47 +8,30 @@
       Responsive="true"
       Unit="Unit.Px">
 
-    <GridColumns>
-        <GridColumn TItem="SalidasBienes" HeaderText="Id" PropertyName="CustomerId" SortString="CustomerId" FilterTextboxWidth="50" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center">
-            @context
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Customer Name" PropertyName="CustomerName" SortString="CustomerName" FilterTextboxWidth="80">
-            @context
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Phone" PropertyName="Phone" SortString="Phone" FilterTextboxWidth="100">
-            @context
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Email" PropertyName="Email" SortString="Email" FilterTextboxWidth="120">
-            @context
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Address" PropertyName="Address" SortString="Address" FilterTextboxWidth="150">
-            @context
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Postal Zip" PropertyName="PostalZip" SortString="PostalZip" FilterTextboxWidth="80">
-            @context
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" FreezeRightPosition="0" HeaderText="Country" PropertyName="Country" SortString="Country" FilterTextboxWidth="80">
-            @context
-        </GridColumn>
+        <GridColumns>
+            <GridColumn TItem="SalidasBienes" HeaderText="ID" PropertyName="idSal" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Nombre" PropertyName="nombre" FilterTextboxWidth="100" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Fecha" PropertyName="fechaHora" FilterTextboxWidth="100" />
+            <GridColumn TItem="SalidasBienes" HeaderText="# Salida" PropertyName="noSal" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Inventario" PropertyName="noInven" FilterTextboxWidth="100" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Descripción" PropertyName="descrip" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Motivo" PropertyName="motivo" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Observaciones" PropertyName="observa" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Área" PropertyName="area" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Enc. Área" PropertyName="eArea" />
+            <GridColumn TItem="SalidasBienes" HeaderText="Estatus" PropertyName="estatus" />
     </GridColumns>
 
 </Grid>
 
-@code {
-    [Inject] public SalidasBienes _customerService { get; set; } = default!;
-
-    // private async Task<GridDataProviderResult<SalidasBienes>> CustomersDataProvider(GridDataProviderRequest<SalidasBienes> request)
-    // {
-    //     string sortString = "";
-    //     SortDirection sortDirection = SortDirection.None;
-
-    //     if (request.Sorting is not null && request.Sorting.Any())
-    //     {
-    //         // Note: Multi column sorting is not supported at this moment
-    //         sortString = request.Sorting.FirstOrDefault()!.SortString;
-    //         sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
-    //     }
-    //     var result = await _customerService.GetCustomersAsync(request.Filters, request.PageNumber, request.PageSize, sortString, sortDirection, request.CancellationToken);
-    //     return await Task.FromResult(new GridDataProviderResult<SalidasBienes> { Data = result.Item1, TotalCount = result.Item2 });
-    // }
+@code{
+    private async Task<GridDataProviderResult<SalidasBienes>> CargarSalidasAsync(GridDataProviderRequest<SalidasBienes> request)
+    {
+        var datos = await tuServicio.salidasConsGAsync(idUsuario, nombreUsuario);
+        return new GridDataProviderResult<SalidasBienes>
+        {
+            Data = datos,
+            TotalCount = datos.Count
+        };
+    }
 }

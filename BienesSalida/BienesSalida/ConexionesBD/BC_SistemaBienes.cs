@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using BienesSalida.Share.Models;
+using Microsoft.Data.SqlClient;
 
 namespace BienesSalida.ConexionesBD
 {
@@ -98,29 +99,50 @@ namespace BienesSalida.ConexionesBD
             }
         }
 
-        public async Task salidasConsGAsync(int idUserEU, string Nombre)
+        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string Nombre)
         {
+            var lista = new List<SalidasBienes>();
+
             try
             {
                 await connection.OpenAsync();
-                Console.WriteLine("Conexión establecida correctamente.");
-                string sql;
-                sql = "EXECT ObtenerSalida @idUserEU, @Nombre";
+                string sql = "EXEC ObtenerSalida @idUserEU, @Nombre";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@idUserEU", idUserEU);
                 command.Parameters.AddWithValue("@Nombre", Nombre);
 
                 await using var reader = await command.ExecuteReaderAsync();
-                await reader.ReadAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var salida = new SalidasBienes
+                    {
+                        idSal = reader.GetInt32(0),
+                        idUserEU = reader.GetInt32(1),
+                        fechaHora = reader.GetString(2),
+                        nombre = reader.GetString(3),
+                        noSal = reader.GetInt32(4),
+                        noInven = reader.GetInt64(5),
+                        descrip = reader.GetString(6),
+                        motivo = reader.GetString(7),
+                        observa = reader.GetString(8),
+                        area = reader.GetString(9),
+                        eArea = reader.GetString(10),
+                        estatus = reader.GetString(11),
+                    };
+                    lista.Add(salida);
+                }
             }
-            catch (SqlException sqlEx)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error en SQL Server4: " + sqlEx.Message);
+                Console.WriteLine("Error al consultar: " + ex.Message);
             }
-            catch (Exception e)
+            finally
             {
-                Console.WriteLine("Error general4: " + e.Message);
+                await connection.CloseAsync();
             }
+
+            return lista;
         }
     }
 }
