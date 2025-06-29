@@ -63,11 +63,8 @@
 
 
 using System.Text;
-using BienesSalida;
-using BienesSalida.Client.Pages;
+using BienesSalida.Client;
 using BienesSalida.Components;
-using BienesSalida.ConexionesBD;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
 
@@ -112,6 +109,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
 
 // ? Servicio local de almacenamiento
 builder.Services.AddScoped<LocalStorageService>();
+//builder.Services.AddSingleton<LocalStorageService>();
 
 var app = builder.Build();
 

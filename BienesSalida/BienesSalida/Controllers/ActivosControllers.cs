@@ -45,6 +45,16 @@ namespace BienesSalida.Controllers
                 //return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
         }
+
+
+        [HttpGet("historial/{idUSer}/{nombre}")]
+        public async Task<IActionResult> GetHistorial(int idUser,string nombre) {
+            var s = await BC_SistemaBienes.salidasConsGAsync(idUser,nombre);
+            //var s = await BC_SistemaBienes.salidasConsGAsync(5912, "ANA TERESA VARGAS BARONA");
+            return Ok(s);
+        }
+
+
         [HttpGet]
         public IActionResult GetActivs() {
             return Ok("Mensajes de prueba ");

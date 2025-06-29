@@ -1,5 +1,5 @@
-using System.Net.Http;
-using BienesSalida.Client.Pages;
+
+using BienesSalida.Client;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

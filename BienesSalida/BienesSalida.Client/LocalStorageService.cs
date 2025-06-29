@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace BienesSalida.Client.Pages
+namespace BienesSalida.Client
 {
     public class LocalStorageService : IAsyncDisposable
     {

@@ -1,11 +1,15 @@
-﻿<Grid TItem="SalidasBienes"
+﻿@inject LocalStorageService localService
+@inject HttpClient client
+
+<Grid 
+@ref="tablaData"
+TItem="SalidasBienes"
 Class="table table-hover table-bordered table-striped"
-@* Data="CargarSalidasAsync" *@
+DataProvider="HistorialProvider"
 AllowPaging="true"
 PageSize="100"
 Responsive="true">
-
-     <GridColumns>
+    <GridColumns>
         <GridColumn TItem="SalidasBienes" HeaderText="Nombre" FilterTextboxWidth="100"> 
             @context.nombre
         </GridColumn>
@@ -41,5 +45,27 @@ Responsive="true">
 </Grid>
 
 @code{
+
+    private Grid<SalidasBienes> tablaData = default!;
+    private IEnumerable<SalidasBienes> historial { set; get; }
+    protected override async Task OnInitializedAsync()
+    {
+        var idUser = await localService.GetItemAsync("idUserBienes");
+        var userBienes = await localService.GetItemAsync("userBienes");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7266/api/activo/historial/{idUser}/{userBienes}");
+        var response = await client.SendAsync(request);
+        var text = await response.Content.ReadAsStringAsync();
+        var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
+        historial = data;
+    }
+    private async Task<GridDataProviderResult<SalidasBienes>> HistorialProvider(GridDataProviderRequest<SalidasBienes> request)
+    {
+            return await Task.FromResult(request.ApplyTo(historial));
+        
+    }
+
+ 
+
 
 }

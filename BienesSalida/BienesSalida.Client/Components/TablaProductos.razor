@@ -34,8 +34,7 @@ Responsive="true">
 </Grid>
 
 @code {
-
-    private IEnumerable<Producto> productos = default!;
+    
     private Paginado? paginado { set; get; } = new();
 
     [Parameter]
@@ -45,26 +44,7 @@ Responsive="true">
     {
         paginado.registros = new();
     }
-    private async Task<GridDataProviderResult<Producto>> EmployeesDataProvider(GridDataProviderRequest<Producto> request)
-    {
-        if (productos is null) // pull employees only one time for client-side filtering, sorting, and paging
-            productos = await GetEmployees(); // call a service or an API to pull the employees
-
-        return await Task.FromResult(request.ApplyTo(productos));
-    }
-
-    private async Task<IEnumerable<Producto>> GetEmployees()
-    {
-        var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta");
-        var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        var text = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(text);
-        paginado = JsonConvert.DeserializeObject<Paginado>(text);
-
-        return  paginado.registros;
-    }
+   
     private async Task GetActivoFijoFilter(long? nInventario )
     {
         try
@@ -73,7 +53,7 @@ Responsive="true">
             {
                 var client = new HttpClient();
                 var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario.ToString()}");
-                //https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
+               //https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
                 var response = await client.SendAsync(request);
                 //response.EnsureSuccessStatusCode();
                 var text = await response.Content.ReadAsStringAsync();
