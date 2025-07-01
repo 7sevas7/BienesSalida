@@ -1,6 +1,8 @@
 ﻿@inject LocalStorageService localService
 @inject HttpClient client
 
+<h3>@nous</h3>
+
 <Grid 
 @ref="tablaData"
 TItem="SalidasBienes"
@@ -48,24 +50,25 @@ Responsive="true">
 
     private Grid<SalidasBienes> tablaData = default!;
     private IEnumerable<SalidasBienes> historial { set; get; }
+
+    public string  nous;
+
     protected override async Task OnInitializedAsync()
     {
         var idUser = await localService.GetItemAsync("idUserBienes");
-        var userBienes = await localService.GetItemAsync("userBienes");
+        //var userBienes = await localService.GetItemAsync("userBienes");
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7266/api/activo/historial/{idUser}/{userBienes}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7266/api/activo/historial/{idUser}");
         var response = await client.SendAsync(request);
         var text = await response.Content.ReadAsStringAsync();
         var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
         historial = data;
+        nous = idUser;
     }
     private async Task<GridDataProviderResult<SalidasBienes>> HistorialProvider(GridDataProviderRequest<SalidasBienes> request)
     {
             return await Task.FromResult(request.ApplyTo(historial));
-        
+         
     }
-
- 
-
 
 }
