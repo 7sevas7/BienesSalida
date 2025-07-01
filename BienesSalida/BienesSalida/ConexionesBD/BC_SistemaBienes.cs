@@ -99,7 +99,7 @@ namespace BienesSalida.ConexionesBD
             }
         }
 
-        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string Nombre)
+        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU)
         {
             var lista = new List<SalidasBienes>();
 
