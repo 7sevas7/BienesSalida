@@ -106,10 +106,10 @@ namespace BienesSalida.ConexionesBD
             try
             {
                 await connection.OpenAsync();
-                string sql = "EXEC ObtenerSalida @idUserEU, @Nombre";
+                string sql = "EXEC ObtenerSalida @idUserEU";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@idUserEU", idUserEU);
-                command.Parameters.AddWithValue("@Nombre", Nombre);
+               // command.Parameters.AddWithValue("@Nombre", Nombre);
 
                 await using var reader = await command.ExecuteReaderAsync();
 

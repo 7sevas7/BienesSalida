@@ -1,5 +1,6 @@
 ﻿@inject LocalStorageService localService
 @inject HttpClient client
+@inject NavigationManager navi
 
 <Grid 
 @ref="tablaData"
@@ -12,34 +13,7 @@ Responsive="true">
     <GridColumns>
         <GridColumn TItem="SalidasBienes" HeaderText="Nombre" FilterTextboxWidth="100"> 
             @context.nombre
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Fecha" FilterTextboxWidth="100"> 
-            @context.fechaHora
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="No. Salida"> 
-            @context.noSal
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="No. Inventario" FilterTextboxWidth="100"> 
-            @context.noInven
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Descripción"> 
-            @context.descrip
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Motivo"> 
-            @context.motivo
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Observaciones"> 
-            @context.observa
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Área"> 
-            @context.area
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Enc. Área"> 
-            @context.eArea
-        </GridColumn>
-        <GridColumn TItem="SalidasBienes" HeaderText="Estatus"> 
-            @context.estatus
-        </GridColumn>
+        </GridColumn>        
     </GridColumns> 
 
 </Grid>
@@ -48,24 +22,29 @@ Responsive="true">
 
     private Grid<SalidasBienes> tablaData = default!;
     private IEnumerable<SalidasBienes> historial { set; get; }
-    protected override async Task OnInitializedAsync()
-    {
-        var idUser = await localService.GetItemAsync("idUserBienes");
-        var userBienes = await localService.GetItemAsync("userBienes");
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7266/api/activo/historial/{idUser}/{userBienes}");
-        var response = await client.SendAsync(request);
-        var text = await response.Content.ReadAsStringAsync();
-        var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
-        historial = data;
-    }
+    
     private async Task<GridDataProviderResult<SalidasBienes>> HistorialProvider(GridDataProviderRequest<SalidasBienes> request)
     {
-            return await Task.FromResult(request.ApplyTo(historial));
+        if (historial is null)
+        {
+            historial = await ObtenerHistorial();
+        }
+        return await Task.FromResult(request.ApplyTo(historial));
         
     }
 
- 
+ private async Task<IEnumerable<SalidasBienes>> ObtenerHistorial()
+    {
+        await localService.InitializeAsync();
+        var idUser = await localService.GetItemAsync("idUserBienes");
+        var userBienes = await localService.GetItemAsync("userBienes");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, navi.BaseUri + $"api/activo/historial/{idUser}/{userBienes}");
+        var response = await client.SendAsync(request);
+        var text = await response.Content.ReadAsStringAsync();
+        var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
+        return data;
+    }
 
 
 }
