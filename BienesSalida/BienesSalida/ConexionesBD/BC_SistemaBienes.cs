@@ -99,7 +99,7 @@ namespace BienesSalida.ConexionesBD
             }
         }
 
-        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string Nombre)
+        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU)
         {
             var lista = new List<SalidasBienes>();
 
@@ -109,7 +109,7 @@ namespace BienesSalida.ConexionesBD
                 string sql = "EXEC ObtenerSalida @idUserEU";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@idUserEU", idUserEU);
-                //command.Parameters.AddWithValue("@Nombre", Nombre);
+               // command.Parameters.AddWithValue("@Nombre", Nombre);
 
                 await using var reader = await command.ExecuteReaderAsync();
 
