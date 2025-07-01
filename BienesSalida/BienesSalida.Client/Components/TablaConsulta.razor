@@ -11,9 +11,36 @@ AllowPaging="true"
 PageSize="100"
 Responsive="true">
     <GridColumns>
-        <GridColumn TItem="SalidasBienes" HeaderText="Nombre" FilterTextboxWidth="100"> 
+        <GridColumn TItem="SalidasBienes" HeaderText="Nombre"> 
             @context.nombre
-        </GridColumn>        
+        </GridColumn>
+         <GridColumn TItem="SalidasBienes" HeaderText="Fecha">
+            @context.fechaHora
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="No. Salida"> 
+            @context.noSal
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="No. Inventario"> 
+            @context.noInven
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="Descripción"> 
+            @context.descrip
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="Motivo"> 
+            @context.motivo
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="Observaciones"> 
+            @context.observa
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="Área"> 
+            @context.area
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="Enc. Área"> 
+            @context.eArea
+        </GridColumn>
+        <GridColumn TItem="SalidasBienes" HeaderText="Estatus"> 
+            @context.estatus
+        </GridColumn>
     </GridColumns> 
 
 </Grid>
@@ -33,13 +60,13 @@ Responsive="true">
         
     }
 
- private async Task<IEnumerable<SalidasBienes>> ObtenerHistorial()
+    private async Task<IEnumerable<SalidasBienes>> ObtenerHistorial()
     {
         await localService.InitializeAsync();
         var idUser = await localService.GetItemAsync("idUserBienes");
-        var userBienes = await localService.GetItemAsync("userBienes");
+        //var userBienes = await localService.GetItemAsync("userBienes");
 
-        var request = new HttpRequestMessage(HttpMethod.Get, navi.BaseUri + $"api/activo/historial/{idUser}/{userBienes}");
+        var request = new HttpRequestMessage(HttpMethod.Get, navi.BaseUri + $"api/activo/historial/{idUser}");
         var response = await client.SendAsync(request);
         var text = await response.Content.ReadAsStringAsync();
         var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
