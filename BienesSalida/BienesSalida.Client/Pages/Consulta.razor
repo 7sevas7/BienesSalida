@@ -11,7 +11,7 @@
     <DateInput TValue="DateOnly" @bind-Value="@date1" Placeholder="Fecha"/>
     <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nombreUs" placeholder="Nombre" Style="text-transform: uppercase">
     <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nInvenStr" placeholder="No. Inventario">
-    <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2">
+    <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2" @onclick="Buscar">
         <Icon Name="IconName.Search" Color="IconColor.White" />
     </Button>
     <Button Color="ButtonColor.Success" class="shadow-lg p-2 m-3">
@@ -19,15 +19,23 @@
     </Button>
 </div>
 
-<TablaConsulta/>
+@* <TablaConsulta Nombre="@nombreUs"
+               Inventario="@nInven"
+               Fecha="@date1" /> *@
 
 @code {
-    private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now);
+
     private TablaConsulta tablaConsulta = default!;
+    private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now);
     public string nombreUs { get; set; } = string.Empty;
     public string nInvenStr { get; set; } = string.Empty;
     public long? nInven => long.TryParse(nInvenStr, out var result) ? result : (long?)null;
 
-
+    private async Task Buscar()
+    {
+        var fechaSeleccionada = date1.ToString(); ;
+        var nombre = nombreUs;
+        var inventario = nInven;
+    }
 
 }

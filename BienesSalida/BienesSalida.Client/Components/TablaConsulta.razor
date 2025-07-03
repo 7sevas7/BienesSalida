@@ -1,4 +1,4 @@
-﻿@inject LocalStorageService localService
+﻿@* @inject LocalStorageService localService
 @inject HttpClient client
 @inject NavigationManager navi
 
@@ -48,30 +48,40 @@ Responsive="true">
 @code{
 
     private Grid<SalidasBienes> tablaData = default!;
+    public string nombreUs { get; set; } = string.Empty;
+    public string nInvenStr { get; set; } = string.Empty;
+    public long? nInven => long.TryParse(nInvenStr, out var result) ? result : (long?)null;
+    public DateOnly date1 { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     private IEnumerable<SalidasBienes> historial { set; get; }
     
     private async Task<GridDataProviderResult<SalidasBienes>> HistorialProvider(GridDataProviderRequest<SalidasBienes> request)
     {
         if (historial is null)
         {
-            historial = await ObtenerHistorial();
+            historial = await ObtenerHistorialAsync();
         }
         return await Task.FromResult(request.ApplyTo(historial));
         
     }
 
-    private async Task<IEnumerable<SalidasBienes>> ObtenerHistorial()
+    private async Task<List<SalidasBienes>> ObtenerHistorialAsync()
     {
         await localService.InitializeAsync();
         var idUser = await localService.GetItemAsync("idUserBienes");
-        //var userBienes = await localService.GetItemAsync("userBienes");
 
-        var request = new HttpRequestMessage(HttpMethod.Get, navi.BaseUri + $"api/activo/historial/{idUser}/{fecha}/{nombre}/{invent}");
+        var fecha = date1.ToString("yyyy-MM-dd"); // Formato seguro para URL
+        var nombre = nombreUs ?? string.Empty;
+        var invent = nInven.HasValue ? nInven.Value.ToString() : "0";
+
+        var url = $"{navi.BaseUri}api/activo/historial/{idUser}/{fecha}/{nombre}/{invent}";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
         var response = await client.SendAsync(request);
         var text = await response.Content.ReadAsStringAsync();
+
         var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
         return data;
     }
 
 
-}
+} *@
