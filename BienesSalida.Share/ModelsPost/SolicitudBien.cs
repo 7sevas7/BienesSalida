@@ -23,7 +23,6 @@ namespace BienesSalida.Share.ModelsPost
         public string? Descripcion { get; set; }
         [Required(ErrorMessage = "Motivo de salida requerido.")]
         public string? MotivoSalida { get; set; }
-        [Required(ErrorMessage = "Observaciones requerido.")]
         public string? Observaciones { get; set; }
         //public Producto? producto { get; set; } = new Producto();
         public string? estatus { get; set; } = "Salida";

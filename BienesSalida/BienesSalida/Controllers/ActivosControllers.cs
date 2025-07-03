@@ -47,9 +47,9 @@ namespace BienesSalida.Controllers
         }
 
 
-        [HttpGet("historial/{idUSer}")]
-        public async Task<IActionResult> GetHistorial(int idUser) {
-            var s = await BC_SistemaBienes.salidasConsGAsync(idUser);
+        [HttpGet("historial/{idUSer}/{fecha}/{nombre}/{invent}")]
+        public async Task<IActionResult> GetHistorial(int idUser, string fecha, string nombre, long invent) {
+            var s = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha, nombre, invent);
             //var s = await BC_SistemaBienes.salidasConsGAsync(5912, "ANA TERESA VARGAS BARONA");
             return Ok(s);
         }

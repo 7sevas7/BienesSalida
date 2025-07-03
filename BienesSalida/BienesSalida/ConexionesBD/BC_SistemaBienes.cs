@@ -99,17 +99,19 @@ namespace BienesSalida.ConexionesBD
             }
         }
 
-        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU)
+        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string fecha, string nombre, long invent)
         {
             var lista = new List<SalidasBienes>();
 
             try
             {
                 await connection.OpenAsync();
-                string sql = "EXEC ObtenerSalida @idUserEU";
+                string sql = "EXEC ObtenerSalida @idUserEU, @fecha, @nombre, @nInventario";
                 await using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@idUserEU", idUserEU);
-               // command.Parameters.AddWithValue("@Nombre", Nombre);
+                command.Parameters.AddWithValue("@fecha", fecha);
+                command.Parameters.AddWithValue("@nombre", nombre);
+                command.Parameters.AddWithValue("@nInventario", invent);
 
                 await using var reader = await command.ExecuteReaderAsync();
 
