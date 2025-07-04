@@ -80,8 +80,7 @@ Responsive="true">
     {
         await localService.InitializeAsync();
         var idUser = await localService.GetItemAsync("idUserBienes");
-
-        var fecha = Fecha?.ToString("yyyy-MM-dd"); // Formato seguro para URL
+        var fecha = Fecha?.ToString("dd/MM/yyyy"); // Formato seguro para URL
         var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         var response = await client.SendAsync(request);

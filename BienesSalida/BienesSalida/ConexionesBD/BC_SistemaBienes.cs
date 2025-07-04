@@ -113,6 +113,8 @@ namespace BienesSalida.ConexionesBD
                 command.Parameters.AddWithValue("@nombre", nombre);
                 command.Parameters.AddWithValue("@nInventario", invent);
 
+                Console.WriteLine(fecha);
+
                 await using var reader = await command.ExecuteReaderAsync();
 
                 while (await reader.ReadAsync())
