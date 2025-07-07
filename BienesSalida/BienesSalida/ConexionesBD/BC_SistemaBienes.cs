@@ -102,6 +102,7 @@ namespace BienesSalida.ConexionesBD
         public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string fecha, string? nombre, long? invent)
         {
             var lista = new List<SalidasBienes>();
+            Console.WriteLine("Ususario: "+idUserEU + "\nFecha: "+ fecha + "\nNombre: "+ nombre + "\nN. inventario: "+ invent);
 
             try
             {
@@ -111,9 +112,7 @@ namespace BienesSalida.ConexionesBD
                 command.Parameters.AddWithValue("@idUserEU", idUserEU);
                 command.Parameters.AddWithValue("@fecha", fecha);
                 command.Parameters.AddWithValue("@nombre", nombre);
-                command.Parameters.AddWithValue("@nInventario", invent);
-
-                Console.WriteLine(fecha);
+                command.Parameters.AddWithValue("@nInventario", invent);               
 
                 await using var reader = await command.ExecuteReaderAsync();
 

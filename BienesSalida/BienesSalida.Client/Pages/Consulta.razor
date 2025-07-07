@@ -8,7 +8,7 @@
 </div>
 
 <div class="mb-3 text-center w-75 mx-auto d-flex align-items-center">
-    <DateInput TValue="DateOnly" @bind-Value="@date1" Placeholder="Fecha"/>
+    <DateInput TValue="DateOnly?" @bind-Value="@date1" Placeholder="Fecha"/>
     <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nombreUs" placeholder="Nombre" Style="text-transform: uppercase">
     <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nInvenStr" placeholder="No. Inventario">
     <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2" @onclick="Buscar">
@@ -27,7 +27,7 @@
 @code {
 
     private TablaConsulta tablaConsulta = default!;
-    private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly? date1 = DateOnly.FromDateTime(DateTime.Now);
     public string nombreUs { get; set; } = string.Empty;
     public string nInvenStr { get; set; } = string.Empty;
     public long? nInven => long.TryParse(nInvenStr, out var result) ? result : (long?)null;
