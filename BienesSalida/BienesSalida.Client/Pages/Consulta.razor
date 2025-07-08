@@ -8,7 +8,7 @@
 </div>
 
 <div class="mb-3 text-center w-75 mx-auto d-flex align-items-center">
-    <DateInput TValue="DateOnly?" @bind-Value="@date1" Placeholder="Fecha"/>
+    <DateInput TValue="DateOnly?" Value="@date1" ValueChanged="OnDateChanged" ValueExpression="() => date1" Placeholder="Fecha" />
     <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nombreUs" placeholder="Nombre" Style="text-transform: uppercase">
     <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nInvenStr" placeholder="No. Inventario">
     <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2" @onclick="Buscar">
@@ -32,11 +32,23 @@
     public string nInvenStr { get; set; } = string.Empty;
     public long? nInven => long.TryParse(nInvenStr, out var result) ? result : (long?)null;
 
+    private void OnDateChanged(DateOnly? value)
+    {
+        // Si el valor viene como default o es inválido, lo hacemos null
+        if (value == null || value == default)
+        {
+            date1 = null;
+        }
+        else
+        {
+            date1 = value;
+        }
+    }
+
     private async Task Buscar()
     {
-        var fechaSeleccionada = date1.ToString(); ;
+        var fechaSeleccionada = date1?.ToString(); // usa el operador ? para evitar null exception
         var nombre = nombreUs;
         var inventario = nInven;
     }
-
 }
