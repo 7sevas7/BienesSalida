@@ -24,17 +24,23 @@
 </div>
 
 <TablaConsulta 
-Nombre="@nombreUs"
-NoInvenStr="@nInvenStr"
-Fecha="@date1"/> 
+Nombre="@nombre"
+NoInvenStr="@nInven"
+Fecha="@date"/> 
 
 @code {
 
     private TablaConsulta tablaConsulta { set; get; }= new();
-    private DateOnly? date1 = DateOnly.FromDateTime(DateTime.Now);
+    //Inputs
+    private DateOnly? date1 = DateOnly.FromDateTime(DateTime.Now);    
     public string nombreUs { get; set; } = string.Empty;
     public string nInvenStr { get; set; } = string.Empty;
-    public long? nInven => long.TryParse(nInvenStr, out var result) ? result : (long?)null;
+
+
+    //nuevos
+    private DateOnly? date = DateOnly.FromDateTime(DateTime.Now);
+    public string nombre { get; set; } = string.Empty;
+    public string nInven { get; set; } = string.Empty;
 
     private void HandleInput(ChangeEventArgs e)
     {
@@ -47,9 +53,9 @@ Fecha="@date1"/>
     private async Task Buscar()
     {
         Console.WriteLine("???");
-        var fechaSeleccionada = date1 is null ? "": date1.ToString();
-        
-        await tablaConsulta.CargaTabla();
+        nombre = nombreUs;
+        nInven = nInvenStr;
+        date = date1;
         StateHasChanged();
         //Console.WriteLine("IMPRESIÓN CON EL BOTÓN: "+fechaSeleccionada +", "+ nombre +", "+ inventario);
     }

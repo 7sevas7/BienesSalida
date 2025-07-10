@@ -106,6 +106,9 @@ namespace BienesSalida.ConexionesBD
 
             try
             {
+                if (fecha is null) {
+                    fecha = "";
+                }
                 await connection.OpenAsync();
                 string sql = "EXEC ObtenerSalida @idUserEU, @fecha, @nombre, @nInventario";
                 await using var command = new SqlCommand(sql, connection);

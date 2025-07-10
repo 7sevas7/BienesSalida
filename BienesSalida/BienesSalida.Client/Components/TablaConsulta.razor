@@ -1,7 +1,7 @@
 ﻿@inject LocalStorageService localService
 @inject HttpClient client
 @inject NavigationManager navi
-@inject IJSRuntime JS
+
 <Grid 
 @ref="tablaData"
 TItem="SalidasBienes"
@@ -56,7 +56,7 @@ Responsive="true">
     [Parameter]
     public DateOnly? Fecha { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-    private IJSObjectReference? _jsModule { set; get; }
+ 
 
     private List<SalidasBienes>? historial { set; get; }  
 
@@ -64,33 +64,23 @@ Responsive="true">
     protected override async Task OnInitializedAsync()
     {
         historial = new();
-
-        _jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./js/localStorage.js");
+        historial = await ObtenerHistorialAsync();
     }
 
-    /*protected override async Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
 
             historial = await ObtenerHistorialAsync();
-    await tablaData.RefreshDataAsync();
+            await tablaData.RefreshDataAsync();
 
-    }*/
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-    if (firstRender) {
-                
-        historial = await ObtenerHistorialAsync();
-        await tablaData.RefreshDataAsync();
-        StateHasChanged();
     }
-    }
+ 
 
     private async Task<List<SalidasBienes>> ObtenerHistorialAsync( )
     {
   
-    var idUser = await _jsModule.InvokeAsync<string>("idUserBienes");
-        if (idUser != string.Empty)
-        {
+        await localService.InitializeAsync();
+        var idUser = await localService.GetItemAsync("idUserBienes");
             var fecha = Fecha?.ToString("dd/MM/yyyy"); // Formato seguro para URL
             var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -100,8 +90,7 @@ Responsive="true">
             var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
 
             return data;
-        }
-        return new List<SalidasBienes>();
+    
     }
     public async Task CargaTabla()
     {
