@@ -58,10 +58,10 @@ namespace BienesSalida.Controllers
 
         // En tu backend
         [HttpGet("proxy")]
-        public async Task<IActionResult> ProxyToExternalApi()
+        public async Task<IActionResult> ProxyToExternalApi([FromQuery] long? invent)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync($"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2941000863&pagina=1");
+            var response = await client.GetAsync($"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={invent}&pagina=1");
             var content = await response.Content.ReadAsStringAsync();
             return Content(content, "application/json");
         }
