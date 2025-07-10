@@ -7,6 +7,7 @@ builder.Services.AddBlazorBootstrap();
 //builder.Services.AddScoped<HttpClient>( sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<LocalStorageService>();
+
 builder.Services.AddScoped(sp =>
 {
     var nav = sp.GetRequiredService<NavigationManager>();

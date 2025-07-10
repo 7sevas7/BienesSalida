@@ -102,7 +102,7 @@ namespace BienesSalida.ConexionesBD
         public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string? fecha, string? nombre, long? invent)
         {
             var lista = new List<SalidasBienes>();
-            Console.WriteLine("Ususario: "+idUserEU + "\nFecha: "+ fecha + "\nNombre: "+ nombre + "\nN. inventario: "+ invent);
+           // Console.WriteLine("Ususario: "+idUserEU + "\nFecha: "+ fecha + "\nNombre: "+ nombre + "\nN. inventario: "+ invent);
 
             try
             {

@@ -5,12 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<BaseHref>/ControlSalidaBienes/</BaseHref>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<BaseHref>/</BaseHref>
 	</PropertyGroup>
+	
 	<ItemGroup>
 	  <None Include="..\BienesSalida.Client\Pages\Component.razor" Link="Component.razor" />
 	</ItemGroup>

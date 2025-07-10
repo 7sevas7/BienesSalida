@@ -9,8 +9,12 @@
 
 <div class="mb-3 text-center w-75 mx-auto d-flex align-items-center">
     <DateInput TValue="DateOnly?" @bind-Value="@date1" @oninput="HandleInput" Placeholder="Fecha" />
-    <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nombreUs" placeholder="Nombre" Style="text-transform: uppercase">
-    <input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nInvenStr" placeholder="No. Inventario">
+
+    <!--<input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nombreUs" placeholder="Nombre" Style="text-transform: uppercase">-->
+    <TextInput @bind-Value="@nombreUs" Class="shadow-lg p-2 m-3" Placeholder="Nombre"/>
+    <!--<input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nInvenStr" placeholder="No. Inventario">-->
+    <TextInput @bind-Value="@nInvenStr" Class="shadow-lg p-2 m-3" Placeholder="No. Inventario" />
+
     <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2" @onclick="Buscar">
         <Icon Name="IconName.Search" Color="IconColor.White" />
     </Button>
@@ -19,13 +23,14 @@
     </Button>
 </div>
 
-<TablaConsulta Nombre="@nombreUs"
-               NoInvenStr="@nInvenStr"
-               Fecha="@date1"/> 
+<TablaConsulta 
+Nombre="@nombreUs"
+NoInvenStr="@nInvenStr"
+Fecha="@date1"/> 
 
 @code {
 
-    private TablaConsulta tablaConsulta = default!;
+    private TablaConsulta tablaConsulta { set; get; }= new();
     private DateOnly? date1 = DateOnly.FromDateTime(DateTime.Now);
     public string nombreUs { get; set; } = string.Empty;
     public string nInvenStr { get; set; } = string.Empty;
@@ -41,11 +46,12 @@
 
     private async Task Buscar()
     {
-        var fechaSeleccionada = date1.ToString();
-        var nombre = nombreUs;
-        var inventario = nInven;
-
-        Console.WriteLine("IMPRESIÓN CON EL BOTÓN: "+fechaSeleccionada +", "+ nombre +", "+ inventario);
+        Console.WriteLine("???");
+        var fechaSeleccionada = date1 is null ? "": date1.ToString();
+        
+        await tablaConsulta.CargaTabla();
+        StateHasChanged();
+        //Console.WriteLine("IMPRESIÓN CON EL BOTÓN: "+fechaSeleccionada +", "+ nombre +", "+ inventario);
     }
 
 }

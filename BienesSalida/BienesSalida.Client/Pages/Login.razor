@@ -92,7 +92,10 @@
         // response.EnsureSuccessStatusCode();
         Console.WriteLine(await response.Content.ReadAsStringAsync());
         var text = await response.Content.ReadAsStringAsync();
+
+
         var session = JsonConvert.DeserializeObject<SessionUsuario>(text);
+
         await localService.InitializeAsync();
         await localService.SetItemAsync("tokenBienes", session.token);
         await localService.SetItemAsync("userBienes", session.usuario);

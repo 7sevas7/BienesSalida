@@ -71,10 +71,21 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // ? Configuración de CORS
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
         builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("https://localhost:7266") // Usa tu origen exacto
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); // Importante si usas cookies/autenticación
+    });
 });
 
 // ? Servicios necesarios para la API
@@ -129,7 +140,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 // ? Aplicar CORS antes de la configuración de rutas
-app.UseCors("AllowAll");
+app.UseCors("CorsPolicy");
 //app.UsePathBase("/ControlSalidaBienes");
 //app.UseRouting();
 app.MapControllers();

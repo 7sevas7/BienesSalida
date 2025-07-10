@@ -1,7 +1,7 @@
 ﻿@inject LocalStorageService localService
 @inject HttpClient client
 @inject NavigationManager navi
-
+@inject IJSRuntime JS
 <Grid 
 @ref="tablaData"
 TItem="SalidasBienes"
@@ -14,7 +14,7 @@ Responsive="true">
         <GridColumn TItem="SalidasBienes" HeaderText="Nombre"> 
             @context.nombre
         </GridColumn>
-         <GridColumn TItem="SalidasBienes" HeaderText="Fecha">
+        <GridColumn TItem="SalidasBienes" HeaderText="Fecha">
             @context.fechaHora
         </GridColumn>
         <GridColumn TItem="SalidasBienes" HeaderText="No. Salida"> 
@@ -47,7 +47,7 @@ Responsive="true">
 
 @code{
 
-    private Grid<SalidasBienes> tablaData = default!;
+    private Grid<SalidasBienes>? tablaData { set; get; } = new();
 
     [Parameter]
     public string Nombre { get; set; } = string.Empty;
@@ -56,38 +56,58 @@ Responsive="true">
     [Parameter]
     public DateOnly? Fecha { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
+    private IJSObjectReference? _jsModule { set; get; }
 
-
-    private List<SalidasBienes>? historial { set; get; } 
+    private List<SalidasBienes>? historial { set; get; }  
 
 
     protected override async Task OnInitializedAsync()
     {
         historial = new();
-        historial = await ObtenerHistorialAsync();
+
+        _jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./js/localStorage.js");
     }
 
-    protected override async Task OnParametersSetAsync()
+    /*protected override async Task OnParametersSetAsync()
     {
-        if (Fecha is not null)
-        {
+
             historial = await ObtenerHistorialAsync();
-            await tablaData.RefreshDataAsync();
-        }
+    await tablaData.RefreshDataAsync();
+
+    }*/
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+    if (firstRender) {
+                
+        historial = await ObtenerHistorialAsync();
+        await tablaData.RefreshDataAsync();
+        StateHasChanged();
+    }
     }
 
-    private async Task<List<SalidasBienes>> ObtenerHistorialAsync()
+    private async Task<List<SalidasBienes>> ObtenerHistorialAsync( )
     {
-        await localService.InitializeAsync();
-        var idUser = await localService.GetItemAsync("idUserBienes");
-        var fecha = Fecha?.ToString("dd/MM/yyyy"); // Formato seguro para URL
-        var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var response = await client.SendAsync(request);
-        var text = await response.Content.ReadAsStringAsync();
+  
+    var idUser = await _jsModule.InvokeAsync<string>("idUserBienes");
+        if (idUser != string.Empty)
+        {
+            var fecha = Fecha?.ToString("dd/MM/yyyy"); // Formato seguro para URL
+            var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await client.SendAsync(request);
+            var text = await response.Content.ReadAsStringAsync();
 
-        var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
-        return data;
+            var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
+
+            return data;
+        }
+        return new List<SalidasBienes>();
+    }
+    public async Task CargaTabla()
+    {
+        historial = new();
+        historial = await ObtenerHistorialAsync();
+    await tablaData.RefreshDataAsync();
     }
 
 

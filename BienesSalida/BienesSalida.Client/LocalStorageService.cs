@@ -2,7 +2,7 @@
 
 namespace BienesSalida.Client
 {
-    public class LocalStorageService : IAsyncDisposable
+    public class LocalStorageService 
     {
         private readonly IJSRuntime _jsRuntime;
         private IJSObjectReference? _jsModule;
@@ -35,14 +35,18 @@ namespace BienesSalida.Client
             if (_jsModule != null)
                 await _jsModule.InvokeVoidAsync("removeItem", key);
         }
+        private bool _disposed;
 
+        /*
         public async ValueTask DisposeAsync()
         {
-            if (_jsModule != null)
+            if (!_disposed && _jsModule != null)
             {
-                await _jsModule.DisposeAsync(); // 🔥 Libera el módulo JS cuando ya no se necesita
+                await _jsModule.DisposeAsync();
+                _disposed = true;
             }
-        }
+
+        }*/
     }
 
 
