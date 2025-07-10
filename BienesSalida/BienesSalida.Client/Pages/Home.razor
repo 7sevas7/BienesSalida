@@ -252,7 +252,7 @@
                 var content = new StringContent(rawJson, null, "application/json");
 
                 var clientt = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Post, "http://172.16.9.10/ControlSalidaBienes/api/activo");
+                var request = new HttpRequestMessage(HttpMethod.Post, $"{navi.BaseUri}api/activo");
                 request.Content = content;
 
                 var response = await clientt.SendAsync(request);

@@ -1,4 +1,6 @@
-﻿<InputFilter  BuscarActivo="GetActivoFijoFilter" />
+﻿@inject NavigationManager navi
+
+<InputFilter  BuscarActivo="GetActivoFijoFilter" />
 
 <Grid TItem="Producto"
 Class="table table-hover table-bordered table-striped"
@@ -52,7 +54,7 @@ Responsive="true">
             if (nInventario is not null)
             {
                 var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario.ToString()}");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{navi.BaseUri}api/activo/proxy");
                //https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
                 var response = await client.SendAsync(request);
                 //response.EnsureSuccessStatusCode();

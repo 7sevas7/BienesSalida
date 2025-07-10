@@ -81,7 +81,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("https://localhost:7266") // Usa tu origen exacto
+        builder.WithOrigins("https://localhost:7266/") // Usa tu origen exacto
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials(); // Importante si usas cookies/autenticación
