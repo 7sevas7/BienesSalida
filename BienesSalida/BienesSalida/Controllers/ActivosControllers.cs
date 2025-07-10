@@ -63,7 +63,8 @@ namespace BienesSalida.Controllers
             var client = new HttpClient();
             var response = await client.GetAsync($"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={invent}&pagina=1");
             var content = await response.Content.ReadAsStringAsync();
-            return Content(content, "application/json");
+            //return Content(content, "application/json");
+            return Ok(content);
         }
 
         [HttpGet]

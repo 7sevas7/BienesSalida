@@ -54,8 +54,8 @@ Responsive="true">
             if (nInventario is not null)
             {
                 var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{navi.BaseUri}api/activo/proxy?invent={nInventario}");
-               //https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID=2113001341
+                //var request = new HttpRequestMessage(HttpMethod.Get, $"{navi.BaseUri}api/activo/proxy?invent={nInventario}");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario}&pagina=1");                
                 var response = await client.SendAsync(request);
                 //response.EnsureSuccessStatusCode();
                 var text = await response.Content.ReadAsStringAsync();
