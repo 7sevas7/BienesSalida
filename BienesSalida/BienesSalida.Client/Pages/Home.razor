@@ -278,18 +278,24 @@
                 serviceModal.Title = "Solicitud con errores:";
                 mensaje = $"Se enviaron {enviadosCorrectamente} artículos correctamente. Resto de los activos ya fueron solicitados previamente";
                 serviceModal.HeaderCssClass = "bg-warning text-dark";
+                
+                await serviceModal.ShowAsync();
+                await Task.Delay(4000);
+                await serviceModal.HideAsync();
             }
             else
             {
                 serviceModal.Title = "Solicitud correcta:";
                 mensaje = "Todos los artículos fueron registrados exitosamente.";
                 serviceModal.HeaderCssClass = "bg-success text-light";
+
+                await serviceModal.ShowAsync();
+                await Task.Delay(4000);
+                await serviceModal.HideAsync();
+                navi.NavigateTo(navi.Uri, forceLoad: true);
             }
 
-            await serviceModal.ShowAsync();
-            await Task.Delay(4000);
-            await serviceModal.HideAsync();
-            navi.NavigateTo(navi.Uri, forceLoad: true);
+            
         }
         catch (Exception ex)
         {
