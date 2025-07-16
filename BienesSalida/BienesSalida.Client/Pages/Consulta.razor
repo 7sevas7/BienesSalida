@@ -1,4 +1,5 @@
 ﻿@page "/consulta"
+@inject IJSRuntime JS
 
 <PageTitle>Historial</PageTitle>
 <h1 class="text-center m-5 custom-text"> Historial de salidas</h1>
@@ -18,12 +19,16 @@
     <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2" @onclick="Buscar">
         <Icon Name="IconName.Search" Color="IconColor.White" />
     </Button>
-    <Button Color="ButtonColor.Success" class="shadow-lg p-2 m-3">
+    <Button Color="ButtonColor.Success"
+            class="shadow-lg p-2 m-3"
+            Disabled="@(!tieneDatos)"
+            @onclick="DescargarExcel">
         <Icon Name="IconName.FileTypeXls" Color="IconColor.White" />
-    </Button> 
+    </Button>
 </div>
 
 <TablaConsulta 
+@ref="tablaRef"
 Nombre="@nombre"
 NoInvenStr="@nInven"
 Fecha="@date"/> 
@@ -42,6 +47,9 @@ Fecha="@date"/>
     public string nombre { get; set; } = string.Empty;
     public string nInven { get; set; } = string.Empty;
 
+    private TablaConsulta? tablaRef;
+    private bool tieneDatos = false;
+
     private void HandleInput(ChangeEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(e.Value?.ToString()))
@@ -52,12 +60,37 @@ Fecha="@date"/>
 
     private async Task Buscar()
     {
-        Console.WriteLine("???");
         nombre = nombreUs;
         nInven = nInvenStr;
         date = date1;
+
         StateHasChanged();
-        //Console.WriteLine("IMPRESIÓN CON EL BOTÓN: "+fechaSeleccionada +", "+ nombre +", "+ inventario);
+
+        await Task.Delay(50); // para que el componente se actualice
+
+        tieneDatos = tablaRef?.ObtenerDatos()?.Any() == true;
     }
 
+    private async Task DescargarExcel()
+    {
+        if (tablaRef is null)
+            return;
+
+        var datos = tablaRef.ObtenerDatos();
+
+        if (datos.Count == 0)
+        {
+            Console.WriteLine("⚠️ No hay registros para exportar.");
+            return;
+        }
+
+        // 🔤 Nombre dinámico con fecha
+        var nombreArchivo = $"Historial_{DateTime.Now:yyyyMMdd}.xlsx";
+
+        // 📦 Generar el contenido del archivo
+        var bytes = ReporteExcel.GenerarArchivo(datos);
+
+        // 📨 Llamar al JS para descargarlo
+        await JS.InvokeVoidAsync("descargarArchivo", nombreArchivo, Convert.ToBase64String(bytes));
+    }
 }

@@ -99,5 +99,8 @@ Responsive="true">
     await tablaData.RefreshDataAsync();
     }
 
-
+    public List<SalidasBienes> ObtenerDatos()
+    {
+        return historial ?? new();
+    }
 } 

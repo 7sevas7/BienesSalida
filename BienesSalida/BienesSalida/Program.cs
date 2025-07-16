@@ -1,76 +1,13 @@
-//using System.Text;
-//using BienesSalida;
-//using BienesSalida.Client.Pages;
-//using BienesSalida.Components;
-//using BienesSalida.ConexionesBD;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
-//using Microsoft.IdentityModel.Tokens;
-
-//var builder = WebApplication.CreateBuilder(args);
-//builder.Services.AddControllers();
-//builder.Services.AddHttpClient();
-//// Add services to the container.
-//builder.Services.AddRazorComponents()
-//    .AddInteractiveServerComponents()
-//    .AddInteractiveWebAssemblyComponents();
-//builder.Services.AddBlazorBootstrap();
-
-
-//builder.Services.AddAuthentication();
-//builder.Services.AddAuthentication("Bearer").AddJwtBearer( opt => {
-//    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9L''e[jZ$ZVy).G:#/@?`Ig3ZYmkd^X\""));
-//    var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
-
-//    opt.RequireHttpsMetadata = false;
-//    opt.TokenValidationParameters = new TokenValidationParameters() { 
-//        ValidateAudience = false,
-//        ValidateIssuer = false,
-//        IssuerSigningKey = signingKey
-//    };
-//});
-
-
-//builder.Services.AddScoped<LocalStorageService>();
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseWebAssemblyDebugging();
-//}
-//else
-//{
-//    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//    app.UseHsts();
-//}
-
-//app.UseHttpsRedirection();
-
-//app.UseStaticFiles();
-//app.UseAntiforgery();
-
-//app.MapRazorComponents<App>()
-//    .AddInteractiveServerRenderMode()
-//    .AddInteractiveWebAssemblyRenderMode()
-//    .AddAdditionalAssemblies(typeof(BienesSalida.Client._Imports).Assembly);
-//app.MapControllers();
-
-//app.UseCors(cors => cors.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
-
-
-//app.Run();
-
-
-using System.Text;
+锘縰sing System.Text;
 using BienesSalida.Client;
 using BienesSalida.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ? Configuraci髇 de CORS
+// ? Configuraci贸n de CORS
 /*builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -84,7 +21,7 @@ builder.Services.AddCors(options =>
         builder.WithOrigins("https://localhost:7266/") // Usa tu origen exacto
                .AllowAnyHeader()
                .AllowAnyMethod()
-               .AllowCredentials(); // Importante si usas cookies/autenticaci髇
+               .AllowCredentials(); // Importante si usas cookies/autenticaci贸n
     });
 });
 
@@ -92,7 +29,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 
-// ? Configuraci髇 de Blazor
+// ? Configuraci贸n de Blazor
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
@@ -103,7 +40,7 @@ builder.Services.AddScoped(sp =>
     return new HttpClient { BaseAddress = new Uri("https://172.16.9.10/ControlSalidaBienes") };
     //return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
 });
-// ? Configuraci髇 de autenticaci髇 con JWT
+// ? Configuraci贸n de autenticaci贸n con JWT
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
 {
     var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9L''e[jZ$ZVy).G:#/@?`Ig3ZYmkd^X\""));
@@ -124,7 +61,7 @@ builder.Services.AddScoped<LocalStorageService>();
 
 var app = builder.Build();
 
-// ? Configuraci髇 del pipeline
+// ? Configuraci贸n del pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -139,7 +76,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-// ? Aplicar CORS antes de la configuraci髇 de rutas
+// ? Aplicar CORS antes de la configuraci贸n de rutas
 app.UseCors("CorsPolicy");
 //app.UsePathBase("/ControlSalidaBienes");
 //app.UseRouting();

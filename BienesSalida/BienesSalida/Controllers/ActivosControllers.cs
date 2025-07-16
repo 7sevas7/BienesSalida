@@ -1,7 +1,7 @@
 ﻿using BienesSalida.ConexionesBD;
 using BienesSalida.Share;
 using BienesSalida.Share.ModelsPost;
-
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BienesSalida.Controllers
@@ -72,5 +72,24 @@ namespace BienesSalida.Controllers
             return Ok("Mensajes de prueba ");
         }
 
+        [HttpGet("generar")]
+        public IActionResult GenerarExcel()
+        {
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Datos");
+
+            worksheet.Cell(1, 1).Value = "ID";
+            worksheet.Cell(1, 2).Value = "Nombre";
+            worksheet.Cell(2, 1).Value = 1;
+            worksheet.Cell(2, 2).Value = "Sebastián";
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "reporte.xlsx");
+        }
     }
 }
