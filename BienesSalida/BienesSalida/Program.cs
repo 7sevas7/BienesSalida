@@ -3,7 +3,6 @@ using BienesSalida.Client;
 using BienesSalida.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -88,9 +88,9 @@ Fecha="@date"/>
         var nombreArchivo = $"Historial_{DateTime.Now:yyyyMMdd}.xlsx";
 
         // 📦 Generar el contenido del archivo
-        var bytes = ReporteExcel.GenerarArchivo(datos);
+        //var bytes = ReporteExcel.GenerarArchivo(datos);
 
         // 📨 Llamar al JS para descargarlo
-        await JS.InvokeVoidAsync("descargarArchivo", nombreArchivo, Convert.ToBase64String(bytes));
+        //await JS.InvokeVoidAsync("descargarArchivo", nombreArchivo, Convert.ToBase64String(bytes));
     }
 }
