@@ -78,10 +78,19 @@ namespace BienesSalida.Controllers
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Datos");
 
-            worksheet.Cell(1, 1).Value = "ID";
-            worksheet.Cell(1, 2).Value = "Nombre";
-            worksheet.Cell(2, 1).Value = 1;
-            worksheet.Cell(2, 2).Value = "Sebastián";
+            worksheet.Cell(1, 1).Value = "Nombre";
+            worksheet.Cell(1, 2).Value = "Fecha";
+            worksheet.Cell(1, 3).Value = "No. Salida";
+            worksheet.Cell(1, 4).Value = "No. Inventario";
+            worksheet.Cell(1, 5).Value = "Descripción";
+            worksheet.Cell(1, 6).Value = "Motivo";
+            worksheet.Cell(1, 7).Value = "Observaciones";
+            worksheet.Cell(1, 8).Value = "Área";
+            worksheet.Cell(1, 9).Value = "Encargado de Área";
+            worksheet.Cell(1, 10).Value = "Estatus";
+
+            //worksheet.Cell(2, 1).Value = 1;
+            //worksheet.Cell(2, 2).Value = "Sebastián";
 
             using var stream = new MemoryStream();
             workbook.SaveAs(stream);
