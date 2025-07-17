@@ -75,28 +75,48 @@ namespace BienesSalida.Controllers
         [HttpGet("generar")]
         public async Task<IActionResult> GenerarExcel([FromQuery] int idUser, [FromQuery] string? fecha, [FromQuery] string? nombre, [FromQuery] long? invent)
         {
-            nombre = nombre is null ? "" : nombre.Trim();
-            invent = invent is null ? 0 : invent;
-            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha, nombre, invent);
+            nombre = nombre?.Trim() ?? "";
+            invent ??= 0;
 
+            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha, nombre, invent);
 
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Datos");
 
-            worksheet.Cell(1, 1).Value = "Nombre";
-            worksheet.Cell(1, 2).Value = "Fecha";
-            worksheet.Cell(1, 3).Value = "No. Salida";
-            worksheet.Cell(1, 4).Value = "No. Inventario";
-            worksheet.Cell(1, 5).Value = "Descripción";
-            worksheet.Cell(1, 6).Value = "Motivo";
-            worksheet.Cell(1, 7).Value = "Observaciones";
-            worksheet.Cell(1, 8).Value = "Área";
-            worksheet.Cell(1, 9).Value = "Encargado de Área";
-            worksheet.Cell(1, 10).Value = "Estatus";
+            // 🧠 Encabezados
+            var headers = new[] {"Nombre", "Fecha", "No. Salida", "No. Inventario", "Descripción","Motivo", "Observaciones", "Área", "Encargado de Área", "Estatus"};
 
-            //worksheet.Cell(2, 1).Value = 1;
-            //worksheet.Cell(2, 2).Value = "Sebastián";
+            for (int col = 0; col < headers.Length; col++)
+            {
+                var cell = worksheet.Cell(1, col + 1);
+                cell.Value = headers[col];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.LightGray;
+                cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            }
 
+            // 📄 Datos
+            int fila = 2;
+            foreach (var item in historial)
+            {
+                worksheet.Cell(fila, 1).Value = item.nombre;
+                worksheet.Cell(fila, 2).Value = item.fechaHora;
+                worksheet.Cell(fila, 3).Value = item.noSal;
+                worksheet.Cell(fila, 4).Value = item.noInven;
+                worksheet.Cell(fila, 5).Value = item.descrip;
+                worksheet.Cell(fila, 6).Value = item.motivo;
+                worksheet.Cell(fila, 7).Value = item.observa;
+                worksheet.Cell(fila, 8).Value = item.area;
+                worksheet.Cell(fila, 9).Value = item.eArea;
+                worksheet.Cell(fila, 10).Value = item.estatus;
+                fila++;
+            }
+
+            // 📏 Ajustar ancho de columnas
+            worksheet.Columns().AdjustToContents();
+
+            // 📦 Generar archivo
             using var stream = new MemoryStream();
             workbook.SaveAs(stream);
             stream.Seek(0, SeekOrigin.Begin);
@@ -105,5 +125,6 @@ namespace BienesSalida.Controllers
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                         "reporte.xlsx");
         }
+    
     }
 }
