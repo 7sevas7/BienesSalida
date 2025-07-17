@@ -73,8 +73,13 @@ namespace BienesSalida.Controllers
         }
 
         [HttpGet("generar")]
-        public IActionResult GenerarExcel()
+        public async Task<IActionResult> GenerarExcel([FromQuery] int idUser, [FromQuery] string? fecha, [FromQuery] string? nombre, [FromQuery] long? invent)
         {
+            nombre = nombre is null ? "" : nombre.Trim();
+            invent = invent is null ? 0 : invent;
+            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha, nombre, invent);
+
+
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Datos");
 

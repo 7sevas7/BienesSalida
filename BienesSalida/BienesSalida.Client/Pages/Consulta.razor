@@ -20,9 +20,9 @@
         <Icon Name="IconName.Search" Color="IconColor.White" />
     </Button>
     <Button Color="ButtonColor.Success"
-            class="shadow-lg p-2 m-3"
-            Disabled="@(!tieneDatos)"
-            @onclick="DescargarExcel">
+    class="shadow-lg p-2 m-3"
+
+    @onclick="DescargarExcel">
         <Icon Name="IconName.FileTypeXls" Color="IconColor.White" />
     </Button>
 </div>
@@ -68,24 +68,28 @@ Fecha="@date"/>
 
         await Task.Delay(50); // para que el componente se actualice
 
-        tieneDatos = tablaRef?.ObtenerDatos()?.Any() == true;
+        tieneDatos = tablaRef?.historial.Count > 0 ? true:false;
     }
 
     private async Task DescargarExcel()
     {
+        Console.WriteLine("⚠️ No hay registros para exportar.");
         if (tablaRef is null)
             return;
 
-        var datos = tablaRef.ObtenerDatos();
 
-        if (datos.Count == 0)
+        var datos = tablaRef.historial;
+
+        if (datos.Count > 0)
         {
+            var url = await tablaRef.ObtenerHistorialExcel();
+            await JS.InvokeVoidAsync("abrirEnNuevaPestania", url);
+
+            //await tablaRef.ObtenerHistorialExcel();
             Console.WriteLine("⚠️ No hay registros para exportar.");
-            return;
+         
         }
 
-        // 🔤 Nombre dinámico con fecha
-        var nombreArchivo = $"Historial_{DateTime.Now:yyyyMMdd}.xlsx";
 
         // 📦 Generar el contenido del archivo
         //var bytes = ReporteExcel.GenerarArchivo(datos);

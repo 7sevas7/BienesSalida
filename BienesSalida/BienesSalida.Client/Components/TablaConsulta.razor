@@ -56,9 +56,9 @@ Responsive="true">
     [Parameter]
     public DateOnly? Fecha { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
- 
 
-    private List<SalidasBienes>? historial { set; get; }  
+
+    public List<SalidasBienes>? historial { set; get; } = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -91,6 +91,19 @@ Responsive="true">
 
             return data;
     
+    }
+    public async Task<string> ObtenerHistorialExcel( )
+    {
+        await localService.InitializeAsync();
+        var idUser = await localService.GetItemAsync("idUserBienes");
+        var fecha = Fecha?.ToString("dd/MM/yyyy");
+        return  $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
+  /*
+      // Formato seguro para URL
+            var url = $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await client.SendAsync(request);    
+            */
     }
     public async Task CargaTabla()
     {
