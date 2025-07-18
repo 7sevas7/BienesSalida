@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager navi
 
+<Toasts Messages="messages" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 <InputFilter  BuscarActivo="GetActivoFijoFilter" />
 
 <Grid TItem="Producto"
@@ -26,41 +27,62 @@ Responsive="true">
             @context.descripcion
         </GridColumn>
         <GridColumn TItem="Producto" HeaderText="Añadir Producto">
-            <Button Color="ButtonColor.Success" @onclick="@(async ()=> await AddActivo(@context))">
-                <Icon Name="IconName.Plus"/>
+            <Button Color="ButtonColor.Success"
+                    Disabled="@activosDeshabilitados.Contains(context.bienID ?? 0)"
+                    @onclick="@(async () => await AddActivo(context))">
+                <Icon Name="IconName.Plus" />
             </Button>
-
         </GridColumn>
     </GridColumns>
 
 </Grid>
 
 @code {
-    
+
     private Paginado? paginado { set; get; } = new();
-
     [Parameter]
-    public Func<Producto,Task>AddActivo{ set; get; }
+    public Func<Producto, Task> AddActivo { get; set; }
+    [Parameter]
+    public Func<long, bool> ValidarInventario { get; set; } = _ => false;
+    List<ToastMessage> messages = new();
+    private HashSet<long> activosDeshabilitados = new();
 
+
+    private void ShowToast(string mensaje, ToastType tipo = ToastType.Warning)
+    {
+        messages.Add(new ToastMessage
+        {
+            Type = tipo,
+            Message = mensaje
+        });
+    }
     protected override async Task OnInitializedAsync()
     {
         paginado.registros = new();
     }
-   
+
     private async Task GetActivoFijoFilter(long? nInventario )
     {
         try
         {
-            if (nInventario is not null)
+            if (nInventario is not null && ValidarInventario.Invoke(nInventario.Value))
+            {
+                ShowToast("Este activo ya fue solicitado hoy.", ToastType.Warning);
+                activosDeshabilitados.Add(nInventario.Value); // 👈 Deshabilitar el botón
+                StateHasChanged();
+                return;
+            }
+            else
             {
                 var client = new HttpClient();
                 //var request = new HttpRequestMessage(HttpMethod.Get, $"{navi.BaseUri}api/activo/proxy?invent={nInventario}");
-                var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario}&pagina=1");                
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario}&pagina=1");
                 var response = await client.SendAsync(request);
                 //response.EnsureSuccessStatusCode();
                 var text = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(text);
                 paginado = JsonConvert.DeserializeObject<Paginado>(text);
+                activosDeshabilitados.Clear();
                 StateHasChanged();
             }
         }

@@ -27,7 +27,8 @@
         <h5 class="label label-default m-2">Hora actual: @horaFormateada</h5>
     </div>
     <div class="col-9">
-        <TablaProductos AddActivo="OnShowModalClick" />
+        <TablaProductos AddActivo="OnShowModalClick"
+                        ValidarInventario="YaFueSolicitado" />
     </div>
 </div>
 <!--
@@ -305,6 +306,12 @@
             serviceModal.HeaderCssClass = "bg-danger text-light";
             await serviceModal.ShowAsync();
         }
+    }
+
+    private bool YaFueSolicitado(long bienID)
+    {
+        var hoy = DateTime.Today.ToString("dd/MM/yyyy");
+        return tablaSolicitud.solicitudes.Any(s => s.NumeroInventario == bienID && s.Fecha == hoy);
     }
    
 }
