@@ -62,15 +62,11 @@ Fecha="@date"/>
 
     private async Task Buscar()
     {
-
         nombre = nombreUs;
         nInven = nInvenStr;
         date = date1;
-
         StateHasChanged();
-
         await Task.Delay(50); // para que el componente se actualice
-
         tieneDatos = tablaRef?.historial.Count > 0 ? true:false;
     }
 

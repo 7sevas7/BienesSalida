@@ -259,12 +259,10 @@
                 var response = await clientt.SendAsync(request);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
-                Console.WriteLine($"Artículo {item.Numero}: {response.StatusCode} → {responseBody}");
-
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     var respuesta = JsonConvert.DeserializeObject<ResponseApi>(responseBody);
-                    errores.Add($"Artículo {item.Numero}: {respuesta?.response ?? " ya fue solicitado previamente"}");
+                    errores.Add($"\nEl artículo {item.NumeroInventario} ya fue solicitado previamente");
                 }
                 else
                 {
@@ -277,7 +275,7 @@
             if (errores.Any())
             {
                 serviceModal.Title = "Solicitud con errores:";
-                mensaje = $"Se enviaron {enviadosCorrectamente} artículos correctamente. Resto de los activos ya fueron solicitados previamente";
+                mensaje = mensaje = $"Se enviaron {enviadosCorrectamente} artículos correctamente.\nLos siguientes activos ya fueron previamente registrados:\n• {string.Join("\n• ", errores)}";
                 serviceModal.HeaderCssClass = "bg-warning text-dark";
                 
                 await serviceModal.ShowAsync();
@@ -294,9 +292,7 @@
                 await Task.Delay(4000);
                 await serviceModal.HideAsync();
                 navi.NavigateTo(navi.Uri, forceLoad: true);
-            }
-
-            
+            }    
         }
         catch (Exception ex)
         {
