@@ -1,15 +1,15 @@
 ﻿
 @inherits LayoutComponentBase
 @inject NavigationManager navi
-
+@inject IJSRuntime JS
 
 <div class="bb-page">
 
     <Sidebar @ref="sidebar"
-             Href="/ControlSalidaBienes/home"
-             ImageSrc="Imagenes/logoW.png"
-             Title="SALIDA DE BIENES"
-             DataProvider="SidebarDataProvider" />
+    Href="/ControlSalidaBienes/home"
+    ImageSrc="Imagenes/logoW.png"
+    Title="SALIDA DE BIENES"
+    DataProvider="SidebarDataProvider" />
 
     <main>
         <div class="bb-top-row px-4 d-flex justify-content-between" style="background-color:rgb(165, 127, 44);">
@@ -46,9 +46,12 @@
         return navItems;
     }
 
-    private void cerrarSesion()
+    private async Task cerrarSesion()
     {
-        navi.NavigateTo("/ControlSalidaBienes"); // Redirigir al usuario al inicio
+        await JS.InvokeVoidAsync("closeSession","tokenBienes");
+        await JS.InvokeVoidAsync("closeSession","userBienes");
+        await JS.InvokeVoidAsync("closeSession","idUserBienes");
+        navi.NavigateTo(navi.BaseUri); // Redirigir al usuario al inicio
     }
 
     private void ToggleSidebar() => sidebar.ToggleSidebar();

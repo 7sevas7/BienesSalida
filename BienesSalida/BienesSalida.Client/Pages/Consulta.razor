@@ -11,7 +11,9 @@
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 <div class="mb-3 text-center w-75 mx-auto d-flex align-items-center">
-    <DateInput TValue="DateOnly?" @bind-Value="@date1" @oninput="HandleInput" Placeholder="Fecha" />
+
+    <!--<DateInput TValue="DateOnly?" ValueChanged="HandleInput" Placeholder="Fecha" />-->
+    <input @oninput="HandleInput" placeholder="Fecha" type="date"/>
 
     <!--<input type="text" class="form-control shadow-lg p-2 m-3" id="search" @bind="nombreUs" placeholder="Nombre" Style="text-transform: uppercase">-->
     <TextInput @bind-Value="@nombreUs" Class="shadow-lg p-2 m-3" Placeholder="Nombre"/>
@@ -21,19 +23,20 @@
     <Button Color="ButtonColor.Primary" class="shadow-lg p-2 m-2" @onclick="Buscar">
         <Icon Name="IconName.Search" Color="IconColor.White" />
     </Button>
-    <Button Color="ButtonColor.Success"
+    <Button 
+        
+        Color="ButtonColor.Success"
     class="shadow-lg p-2 m-3"
 
     @onclick="DescargarExcel">
         <Icon Name="IconName.FileTypeXls" Color="IconColor.White" />
     </Button>
+
 </div>
 
 <TablaConsulta 
 @ref="tablaRef"
-Nombre="@nombre"
-NoInvenStr="@nInven"
-Fecha="@date"/> 
+/> 
 
 @code {
 
@@ -54,20 +57,34 @@ Fecha="@date"/>
 
     private void HandleInput(ChangeEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(e.Value?.ToString()))
+
+        var valueStr = e?.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(valueStr))
         {
             date1 = null;
+            return;
+        }
+
+        if (DateTime.TryParse(valueStr, out var dt))
+        {
+            date1 = DateOnly.FromDateTime(dt);
+        }
+        else
+        {
+            date1 = null; // o puedes lanzar una alerta
         }
     }
 
     private async Task Buscar()
     {
-        nombre = nombreUs;
-        nInven = nInvenStr;
-        date = date1;
-        StateHasChanged();
-        await Task.Delay(50); // para que el componente se actualice
-        tieneDatos = tablaRef?.historial.Count > 0 ? true:false;
+        
+        // Llama directamente la recarga si ya está montado el hijo
+        if (tablaRef is not null)
+        {
+            await tablaRef.CargaTabla(nombreUs,nInvenStr,date1);
+            tieneDatos = tablaRef.historial.Count > 0;
+        }
     }
 
     List<ToastMessage> messages = new List<ToastMessage>();

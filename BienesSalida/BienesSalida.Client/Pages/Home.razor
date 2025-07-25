@@ -28,7 +28,7 @@
     </div>
     <div class="col-9">
         <TablaProductos AddActivo="OnShowModalClick"
-                        ValidarInventario="YaFueSolicitado" />
+        ValidarInventario="YaFueSolicitado" />
     </div>
 </div>
 <!--
@@ -212,6 +212,11 @@
             await localService.InitializeAsync();
             nombreUsuario = await localService.GetItemAsync("userBienes");
             noEmple = await localService.GetItemAsync("idUserBienes");
+
+            if (string.IsNullOrEmpty(noEmple))
+            {
+                navi.NavigateTo(navi.BaseUri);    
+            }
         }
     }
     public async Task ImprimirActivos()

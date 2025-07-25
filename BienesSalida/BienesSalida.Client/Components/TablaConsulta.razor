@@ -1,6 +1,7 @@
-﻿@inject LocalStorageService localService
+﻿<!--inject LocalStorageService localService-->
 @inject HttpClient client
 @inject NavigationManager navi
+@inject IJSRuntime JS
 
 <Grid 
 @ref="tablaData"
@@ -47,73 +48,75 @@ Responsive="true">
 
 @code{
 
-    private Grid<SalidasBienes>? tablaData { set; get; } = new();
+    private Grid<SalidasBienes>? tablaData { get; set; } = new();
+    private string? idUser;
+    public List<SalidasBienes>? historial { get; set; } = new();
 
-    [Parameter]
     public string Nombre { get; set; } = string.Empty;
-    [Parameter]
+
     public string NoInvenStr { get; set; } = string.Empty;
-    [Parameter]
-    public DateOnly? Fecha { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+    public string? fecha { get; set; }
+
+    private bool _jsInitialized = false;
 
 
-
-    public List<SalidasBienes>? historial { set; get; } = new();
-
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        historial = new();
-        historial = await ObtenerHistorialAsync();
+        if (firstRender && !_jsInitialized)
+        {
+            _jsInitialized = true;
+            idUser = await JS.InvokeAsync<string>("getLocal", "idUserBienes");
+            Console.WriteLine(idUser);
+            if (string.IsNullOrEmpty(idUser))
+            {
+                Console.WriteLine("Navis");
+                navi.NavigateTo(navi.BaseUri);            
+            }
+            await CargaTabla("","",DateOnly.FromDateTime(DateTime.Now)); // Cargar por primera vez
+            StateHasChanged(); // Asegura que el UI se actualice         
+        }
     }
 
-    protected override async Task OnParametersSetAsync()
+
+    private async Task<List<SalidasBienes>> ObtenerHistorialAsync(string? nombre = "", string? inv = "", DateOnly? Fecha = null)
     {
+        Nombre = nombre;
+        NoInvenStr = inv;
 
-            historial = await ObtenerHistorialAsync();
-            await tablaData.RefreshDataAsync();
+        fecha = Fecha?.ToString("dd/MM/yyyy"); 
+        var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
 
+        var response = await client.GetAsync(url);
+        var text = await response.Content.ReadAsStringAsync();
+        var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
+
+        return data ?? new();
     }
- 
 
-    private async Task<List<SalidasBienes>> ObtenerHistorialAsync( )
+    public async Task<string> ObtenerHistorialExcel()
     {
-  
-        await localService.InitializeAsync();
-        var idUser = await localService.GetItemAsync("idUserBienes");
-            var fecha = Fecha?.ToString("dd/MM/yyyy"); // Formato seguro para URL
-            var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await client.SendAsync(request);
-            var text = await response.Content.ReadAsStringAsync();
-
-            var data = JsonConvert.DeserializeObject<List<SalidasBienes>>(text);
-
-            return data;
-    
+        //var fecha = Fecha?.ToString("dd/MM/yyyy");
+        return $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
     }
-    public async Task<string> ObtenerHistorialExcel( )
+
+    public async Task CargaTabla(string? nombre = "", string? inv = "", DateOnly? Fecha = null)
     {
-        await localService.InitializeAsync();
-        var idUser = await localService.GetItemAsync("idUserBienes");
-        var fecha = Fecha?.ToString("dd/MM/yyyy");
-        return  $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
-  /*
-      // Formato seguro para URL
-            var url = $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await client.SendAsync(request);    
-            */
-    }
-    public async Task CargaTabla()
-    {
-        historial = new();
-        historial = await ObtenerHistorialAsync();
-    await tablaData.RefreshDataAsync();
+        if (string.IsNullOrEmpty(idUser))
+            return;
+
+        historial = await ObtenerHistorialAsync(nombre,inv,Fecha);
+
+        Console.WriteLine("Obteniendo datos "+ historial.Count);
+        await tablaData.RefreshDataAsync();
+        StateHasChanged();
+        Console.WriteLine("sasasasa");
+        
     }
 
     public List<SalidasBienes> ObtenerDatos()
     {
         return historial ?? new();
     }
+
 } 
