@@ -79,7 +79,7 @@ Responsive="true">
     }
 
 
-    private async Task<List<SalidasBienes>> ObtenerHistorialAsync(string? nombre = "", string? inv = "", DateOnly? Fecha = null)
+    private async Task<List<SalidasBienes>> ObtenerHistorialAsync(string? nombre = "", string? inv = "", DateOnly? Fecha = null, DateOnly? Fecha2 = null)
     {
         Nombre = nombre;
         NoInvenStr = inv;
@@ -100,12 +100,12 @@ Responsive="true">
         return $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha}&invent={NoInvenStr}&nombre={Nombre}";
     }
 
-    public async Task CargaTabla(string? nombre = "", string? inv = "", DateOnly? Fecha = null)
+    public async Task CargaTabla(string? nombre = "", string? inv = "", DateOnly? Fecha = null, DateOnly? Fecha2 = null)
     {
         if (string.IsNullOrEmpty(idUser))
             return;
 
-        historial = await ObtenerHistorialAsync(nombre,inv,Fecha);
+        historial = await ObtenerHistorialAsync(nombre, inv, Fecha, Fecha2);
 
         Console.WriteLine("Obteniendo datos "+ historial.Count);
         await tablaData.RefreshDataAsync();
