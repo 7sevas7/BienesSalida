@@ -12,10 +12,6 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<BaseHref>/</BaseHref>
 	</PropertyGroup>
-	
-	<ItemGroup>
-	  <None Include="..\BienesSalida.Client\Pages\Component.razor" Link="Component.razor" />
-	</ItemGroup>
 
 	<ItemGroup>
     <ProjectReference Include="..\..\BienesSalida.Share\BienesSalida.Share.csproj" />
