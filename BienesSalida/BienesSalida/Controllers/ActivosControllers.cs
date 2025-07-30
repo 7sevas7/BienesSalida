@@ -48,10 +48,10 @@ namespace BienesSalida.Controllers
 
 
         [HttpGet("historial")]
-        public async Task<IActionResult> GetHistorial([FromQuery] int idUser, [FromQuery] string? fecha, [FromQuery] string? nombre, [FromQuery] long? invent) {
+        public async Task<IActionResult> GetHistorial([FromQuery] int idUser, [FromQuery] string? fecha1, [FromQuery] string? fecha2, [FromQuery] string? nombre, [FromQuery] long? invent) {
             nombre = nombre is null ? "": nombre.Trim();
             invent = invent is null ? 0 : invent;
-            var s = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha, nombre, invent);
+            var s = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha1, fecha2, nombre, invent);
             //var s = await BC_SistemaBienes.salidasConsGAsync(5912, "ANA TERESA VARGAS BARONA");
             return Ok(s);
         }
@@ -73,12 +73,12 @@ namespace BienesSalida.Controllers
         }
 
         [HttpGet("generar")]
-        public async Task<IActionResult> GenerarExcel([FromQuery] int idUser, [FromQuery] string? fecha, [FromQuery] string? nombre, [FromQuery] long? invent)
+        public async Task<IActionResult> GenerarExcel([FromQuery] int idUser, [FromQuery] string? fecha1, [FromQuery] string? fecha2, [FromQuery] string? nombre, [FromQuery] long? invent)
         {
             nombre = nombre?.Trim() ?? "";
             invent ??= 0;
 
-            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha, nombre, invent);
+            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha1, fecha2, nombre, invent);
 
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Datos");
