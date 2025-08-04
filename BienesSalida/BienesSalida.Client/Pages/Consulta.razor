@@ -13,11 +13,11 @@
     <div class="row g-3 align-items-end">
         <div class="col-md-3">
             <label class="form-label">Fecha de inicio</label>
-            <input type="date" class="form-control" @oninput="HandleInput" />
+            <input type="date" class="form-control" @oninput="HandleInput" @bind-value="date1" />
         </div>
         <div class="col-md-3">
             <label class="form-label">Fecha final</label>
-            <input type="date" class="form-control" @oninput="HandleInput2" />
+            <input type="date" class="form-control" @oninput="HandleInput2"  />
         </div>
         <div class="col-md-3">
             <TextInput @bind-Value="@nombreUs" Class="form-control" Placeholder="Nombre" />
@@ -29,7 +29,7 @@
             <Button Color="ButtonColor.Primary" class="shadow-sm" @onclick="Buscar">
                 <Icon Name="IconName.Search" Color="IconColor.White" />
             </Button>
-            <Button Color="ButtonColor.Success" class="shadow-sm" @onclick="DescargarExcel">
+            <Button Color="ButtonColor.Success" class="shadow-sm" @onclick="DescargarExcel" Disabled="@(!tieneDatos)">
                 <Icon Name="IconName.FileTypeXls" Color="IconColor.White" />
             </Button>
         </div>
@@ -39,21 +39,16 @@
 
 @code {
 
-    private TablaConsulta tablaConsulta { set; get; }= new();
+    
     //Inputs
     private DateOnly? date1 = DateOnly.FromDateTime(DateTime.Now);
-    private DateOnly? date2 = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly? date2 = null;
     public string nombreUs { get; set; } = string.Empty;
     public string nInvenStr { get; set; } = string.Empty;
 
-    //nuevos
-    private DateOnly? date = DateOnly.FromDateTime(DateTime.Now);
-    public string nombre { get; set; } = string.Empty;
-    public string nInven { get; set; } = string.Empty;
 
     private TablaConsulta? tablaRef { set; get; }=new();
     private bool tieneDatos = false;
-
     private void HandleInput(ChangeEventArgs e)
     {
 
@@ -74,7 +69,6 @@
             date1 = null;
         }
     }
-
     private void HandleInput2(ChangeEventArgs e)
     {
 
@@ -96,9 +90,10 @@
         }
     }
 
+
     private async Task Buscar()
     {
-        
+
         // Llama directamente la recarga si ya está montado el hijo
         if (tablaRef is not null)
         {
@@ -131,5 +126,9 @@
             await JS.InvokeVoidAsync("abrirEnNuevaPestania", url);
             ShowMessage(ToastType.Warning);         
         }
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        tieneDatos = tablaRef.historial.Count >= 1;
     }
 }

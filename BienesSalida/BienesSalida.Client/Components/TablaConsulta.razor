@@ -88,7 +88,7 @@ Responsive="true">
         fecha1 = Fecha1?.ToString("dd/MM/yyyy"); 
         fecha2 = Fecha2?.ToString("dd/MM/yyyy");
 
-        var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fecha={fecha1}&invent={NoInvenStr}&nombre={Nombre}";
+        var url = $"{navi.BaseUri}api/activo/historial?idUser={idUser}&fechaMin={fecha1}&fechaMax={fecha2}&invent={NoInvenStr}&nombre={Nombre}";
 
         var response = await client.GetAsync(url);
         var text = await response.Content.ReadAsStringAsync();
@@ -100,7 +100,8 @@ Responsive="true">
     public async Task<string> ObtenerHistorialExcel()
     {
         //var fecha = Fecha?.ToString("dd/MM/yyyy");
-        return $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha1}&invent={NoInvenStr}&nombre={Nombre}";
+        return   $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fechaMin={fecha1}&fechaMax={fecha2}&invent={NoInvenStr}&nombre={Nombre}";
+        //return $"{navi.BaseUri}api/activo/generar?idUser={idUser}&fecha={fecha1}&invent={NoInvenStr}&nombre={Nombre}";
     }
 
     public async Task CargaTabla(string? nombre = "", string? inv = "", DateOnly? Fecha1 = null, DateOnly? Fecha2 = null)
@@ -116,7 +117,7 @@ Responsive="true">
         Console.WriteLine("sasasasa");
         
     }
-
+    
     public List<SalidasBienes> ObtenerDatos()
     {
         return historial ?? new();

@@ -99,17 +99,47 @@ namespace BienesSalida.ConexionesBD
             }
         }
 
-        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string? fecha1, string? fecha2, string? nombre, long? invent)
-        {
-            var lista = new List<SalidasBienes>();
-           // Console.WriteLine("Ususario: "+idUserEU + "\nFecha: "+ fecha + "\nNombre: "+ nombre + "\nN. inventario: "+ invent);
 
+        /// <summary>
+        /// Regresa todos los activos sacados el día de hoy  o la fecha 
+        /// </summary>
+        /// <param name="fecha"></param>
+        /// <returns></returns>
+        public async Task<List<long>> activoHoy(string? fecha) {
+            var lista = new List<long>();
             try
             {
-                if (fecha1 is null && fecha2 is null) {
-                    fecha1 = "";
-                    fecha2 = "";
+                await connection.OpenAsync();
+
+                string sql = $"SELECT * FROM Salida WHERE fechaHora = CONVERT(DATE,'{fecha}',103);";
+                await using var COMMAND = new SqlCommand(sql, connection);
+                await using var reader = await COMMAND.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var nInventario = reader.GetInt64(5);
+                    lista.Add(nInventario);
                 }
+             
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al consultar: " + ex.Message);
+            }
+            finally { 
+                await connection.CloseAsync();
+            }
+            return lista;
+        }
+
+        public async Task<List<SalidasBienes>> salidasConsGAsync(int idUserEU, string? fecha1, string? fecha2, string? nombre, long? invent)
+        {
+            var lista = new List<SalidasBienes>();           
+            try
+            {
+                if (fecha1 is null) { fecha1 = ""; }
+
+                if (fecha2 is null) { fecha2 = ""; }
                 await connection.OpenAsync();
                 string sql = "EXEC ObtenerSalida @idUserEU, @fechaI, @fechaF, @nombre, @nInventario";
                 await using var command = new SqlCommand(sql, connection);

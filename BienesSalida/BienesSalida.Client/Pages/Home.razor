@@ -224,7 +224,7 @@
         var texto = JsonConvert.SerializeObject(tablaSolicitud.solicitudes);
         Console.WriteLine(texto);
     }
- 
+
     private async Task InsertarBienes()
     {
         Console.WriteLine("Intento de envío individual de artículos");
@@ -255,6 +255,8 @@
                 };
 
                 var rawJson = JsonConvert.SerializeObject(solicitudIndividual);
+
+                Console.WriteLine(rawJson);
                 var content = new StringContent(rawJson, null, "application/json");
 
                 var clientt = new HttpClient();

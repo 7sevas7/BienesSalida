@@ -48,16 +48,16 @@ namespace BienesSalida.Controllers
 
 
         [HttpGet("historial")]
-        public async Task<IActionResult> GetHistorial([FromQuery] int idUser, [FromQuery] string? fecha1, [FromQuery] string? fecha2, [FromQuery] string? nombre, [FromQuery] long? invent) {
+        public async Task<IActionResult> GetHistorial([FromQuery] int idUser, [FromQuery] string? fechaMin, [FromQuery] string? fechaMax, [FromQuery] string? nombre, [FromQuery] long? invent) {
             nombre = nombre is null ? "": nombre.Trim();
             invent = invent is null ? 0 : invent;
-            var s = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha1, fecha2, nombre, invent);
+            var s = await BC_SistemaBienes.salidasConsGAsync(idUser, fechaMin, fechaMax, nombre, invent);
             //var s = await BC_SistemaBienes.salidasConsGAsync(5912, "ANA TERESA VARGAS BARONA");
             return Ok(s);
         }
 
         // En tu backend
-        [HttpGet("proxy")]
+        [HttpGet("verificar")]
         public async Task<IActionResult> ProxyToExternalApi([FromQuery] long? invent)
         {
             var client = new HttpClient();
@@ -67,18 +67,19 @@ namespace BienesSalida.Controllers
             return Ok(content);
         }
 
-        [HttpGet]
-        public IActionResult GetActivs() {
-            return Ok("Mensajes de prueba ");
+        [HttpGet("activosfecha")]
+        public async Task<IActionResult> GetActivos([FromQuery]string? fecha) {
+            var listaInventarios = await BC_SistemaBienes.activoHoy(fecha);
+            return Ok(listaInventarios);
         }
 
         [HttpGet("generar")]
-        public async Task<IActionResult> GenerarExcel([FromQuery] int idUser, [FromQuery] string? fecha1, [FromQuery] string? fecha2, [FromQuery] string? nombre, [FromQuery] long? invent)
+        public async Task<IActionResult> GenerarExcel([FromQuery] int idUser, [FromQuery] string? fechaMin, [FromQuery] string? fechaMax, [FromQuery] string? nombre, [FromQuery] long? invent)
         {
             nombre = nombre?.Trim() ?? "";
             invent ??= 0;
 
-            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fecha1, fecha2, nombre, invent);
+            var historial = await BC_SistemaBienes.salidasConsGAsync(idUser, fechaMin, fechaMax, nombre, invent);
 
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Datos");

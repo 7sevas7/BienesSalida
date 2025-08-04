@@ -28,8 +28,8 @@ Responsive="true">
         </GridColumn>
         <GridColumn TItem="Producto" HeaderText="Añadir Producto">
             <Button Color="ButtonColor.Success"
-                    Disabled="@activosDeshabilitados.Contains(context.bienID ?? 0)"
-                    @onclick="@(async () => await AddActivo(context))">
+            Disabled="@activosDeshabilitados.Contains(context.bienID ?? 0)"
+            @onclick="@(async () => await AddActivo(context))">
                 <Icon Name="IconName.Plus" />
             </Button>
         </GridColumn>
@@ -74,6 +74,10 @@ Responsive="true">
             }
             else
             {
+                //No Activos 
+                activosDeshabilitados.Clear();
+
+
                 var client = new HttpClient();
                 //var request = new HttpRequestMessage(HttpMethod.Get, $"{navi.BaseUri}api/activo/proxy?invent={nInventario}");
                 var request = new HttpRequestMessage(HttpMethod.Get, $"https://sistemas.dif.hidalgo.gob.mx/WebServicesARM/ActivoFijo/api/Bienes/consulta?bienID={nInventario}&pagina=1");
@@ -82,7 +86,16 @@ Responsive="true">
                 var text = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(text);
                 paginado = JsonConvert.DeserializeObject<Paginado>(text);
-                activosDeshabilitados.Clear();
+                
+                var listaInactivos = new List<long>();
+
+                var activos = await this.getActivosFechas();
+
+                foreach (var item in activos)
+                {
+                    activosDeshabilitados.Add(item);
+                }
+
                 StateHasChanged();
             }
         }
@@ -91,5 +104,27 @@ Responsive="true">
             Console.WriteLine("Ocurrió un error inesperado: " + e.Message);
         }
         //return paginado.registros;
+    }
+
+    public async Task<List<long>?> getActivosFechas()
+    {
+        try
+        {
+            var lista = new List<long>();
+            var fecha = DateOnly.FromDateTime(DateTime.Now);
+            var dateFecha = fecha.ToString("dd/MM/yyyy");
+            var client = new HttpClient();
+            var URL = $"{navi.BaseUri}api/activo/activosfecha?fecha={dateFecha}";
+            var request = new HttpRequestMessage(HttpMethod.Get, URL);
+            var response = await client.SendAsync(request);
+            var responseTxt = await response.Content.ReadAsStringAsync();
+            lista =  JsonConvert.DeserializeObject<List<long>>(responseTxt);
+            return lista;
+        } catch (Exception ex)
+        {
+
+            return new List<long>();
+        }
+
     }
 }
