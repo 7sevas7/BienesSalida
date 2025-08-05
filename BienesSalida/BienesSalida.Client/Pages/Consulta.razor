@@ -39,7 +39,7 @@
 
 @code {
 
-    
+
     //Inputs
     private DateOnly? date1 = DateOnly.FromDateTime(DateTime.Now);
     private DateOnly? date2 = null;
@@ -114,10 +114,13 @@
 
     private async Task DescargarExcel()
     {
-        ShowMessage(ToastType.Warning);
-        if (tablaRef is null)
-            return;
 
+        // if (tablaRef is null)
+        // {
+        //     ShowMessage(ToastType.Warning);
+        //     return;
+        // }
+        
         var datos = tablaRef.historial;
 
         if (datos.Count > 0)
